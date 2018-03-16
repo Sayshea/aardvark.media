@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\..\packages\FSharp.Compiler.Tools\build\FSharp.Compiler.Tools.props" Condition="Exists('..\..\..\packages\FSharp.Compiler.Tools\build\FSharp.Compiler.Tools.props')" Label="Paket" />
+  <Import Project="..\..\..\..\packages\FSharp.Compiler.Tools\build\FSharp.Compiler.Tools.props" Condition="Exists('..\..\..\..\packages\FSharp.Compiler.Tools\build\FSharp.Compiler.Tools.props')" Label="Paket" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>206c17a2-a3a1-4191-8ca3-da92197bb73b</ProjectGuid>
+    <ProjectGuid>{84f35393-e943-4903-9358-1655717990a6}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>_01___Inc</RootNamespace>
     <AssemblyName>Inc</AssemblyName>
@@ -21,7 +21,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <Tailcalls>false</Tailcalls>
-    <OutputPath>..\..\..\bin\Debug\</OutputPath>
+    <OutputPath>..\..\..\..\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -33,7 +33,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <Tailcalls>true</Tailcalls>
-    <OutputPath>..\..\..\bin\Release</OutputPath>
+    <OutputPath>..\..\..\..\bin\Release</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -57,27 +57,27 @@
     <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Aardvark.Cef.WinForms\Aardvark.Cef.WinForms.fsproj">
+    <ProjectReference Include="..\..\..\Aardvark.Cef.WinForms\Aardvark.Cef.WinForms.fsproj">
       <Name>Aardvark.Cef.WinForms</Name>
       <Project>{f20c78dd-06cb-44e8-90db-6de144863078}</Project>
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\Aardvark.Cef\Aardvark.Cef.fsproj">
+    <ProjectReference Include="..\..\..\Aardvark.Cef\Aardvark.Cef.fsproj">
       <Name>Aardvark.Cef</Name>
       <Project>{70c08f03-f4a5-414a-abd6-cc07dc42e07c}</Project>
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\Aardvark.Service\Aardvark.Service.fsproj">
+    <ProjectReference Include="..\..\..\Aardvark.Service\Aardvark.Service.fsproj">
       <Name>Aardvark.Service</Name>
       <Project>{773eb4c7-ba14-4a60-b6c5-8a27c7d80be2}</Project>
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\Aardvark.UI.Primitives\Aardvark.UI.Primitives.fsproj">
+    <ProjectReference Include="..\..\..\Aardvark.UI.Primitives\Aardvark.UI.Primitives.fsproj">
       <Name>Aardvark.UI.Primitives</Name>
       <Project>{f0d88aca-53db-492c-88cf-080f67fef6b8}</Project>
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\Aardvark.UI\Aardvark.UI.fsproj">
+    <ProjectReference Include="..\..\..\Aardvark.UI\Aardvark.UI.fsproj">
       <Name>Aardvark.UI</Name>
       <Project>{222260e2-428b-485d-89fb-bfbf1d87cd06}</Project>
       <Private>True</Private>
@@ -110,7 +110,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="Aardvark.Application">
-          <HintPath>..\..\..\packages\Aardvark.Application\lib\net45\Aardvark.Application.dll</HintPath>
+          <HintPath>..\..\..\..\packages\Aardvark.Application\lib\net45\Aardvark.Application.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -124,7 +124,7 @@
           <Paket>True</Paket>
         </Reference>
         <Reference Include="Aardvark.Application.WinForms">
-          <HintPath>..\..\..\packages\Aardvark.Application.WinForms\lib\net45\Aardvark.Application.WinForms.dll</HintPath>
+          <HintPath>..\..\..\..\packages\Aardvark.Application.WinForms\lib\net45\Aardvark.Application.WinForms.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -135,7 +135,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="Aardvark.Application.WinForms.GL">
-          <HintPath>..\..\..\packages\Aardvark.Application.WinForms.GL\lib\net45\Aardvark.Application.WinForms.GL.dll</HintPath>
+          <HintPath>..\..\..\..\packages\Aardvark.Application.WinForms.GL\lib\net45\Aardvark.Application.WinForms.GL.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -152,7 +152,7 @@
           <Paket>True</Paket>
         </Reference>
         <Reference Include="Aardvark.Base">
-          <HintPath>..\..\..\packages\Aardvark.Base\lib\net45\Aardvark.Base.dll</HintPath>
+          <HintPath>..\..\..\..\packages\Aardvark.Base\lib\net45\Aardvark.Base.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -163,7 +163,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="Aardvark.Base.Essentials">
-          <HintPath>..\..\..\packages\Aardvark.Base.Essentials\lib\net45\Aardvark.Base.Essentials.dll</HintPath>
+          <HintPath>..\..\..\..\packages\Aardvark.Base.Essentials\lib\net45\Aardvark.Base.Essentials.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -174,12 +174,12 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="Aardvark.Base.FSharp">
-          <HintPath>..\..\..\packages\Aardvark.Base.FSharp\lib\net45\Aardvark.Base.FSharp.dll</HintPath>
+          <HintPath>..\..\..\..\packages\Aardvark.Base.FSharp\lib\net45\Aardvark.Base.FSharp.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
         <Reference Include="Aardvark.Base.TypeProviders">
-          <HintPath>..\..\..\packages\Aardvark.Base.FSharp\lib\net45\Aardvark.Base.TypeProviders.dll</HintPath>
+          <HintPath>..\..\..\..\packages\Aardvark.Base.FSharp\lib\net45\Aardvark.Base.TypeProviders.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -190,7 +190,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="Aardvark.Base.Incremental">
-          <HintPath>..\..\..\packages\Aardvark.Base.Incremental\lib\net45\Aardvark.Base.Incremental.dll</HintPath>
+          <HintPath>..\..\..\..\packages\Aardvark.Base.Incremental\lib\net45\Aardvark.Base.Incremental.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -201,7 +201,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="Aardvark.Base.Rendering">
-          <HintPath>..\..\..\packages\Aardvark.Base.Rendering\lib\net45\Aardvark.Base.Rendering.dll</HintPath>
+          <HintPath>..\..\..\..\packages\Aardvark.Base.Rendering\lib\net45\Aardvark.Base.Rendering.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -212,7 +212,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="Aardvark.Base.Runtime">
-          <HintPath>..\..\..\packages\Aardvark.Base.Runtime\lib\net45\Aardvark.Base.Runtime.dll</HintPath>
+          <HintPath>..\..\..\..\packages\Aardvark.Base.Runtime\lib\net45\Aardvark.Base.Runtime.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -223,7 +223,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="Aardvark.Compiler.DomainTypes">
-          <HintPath>..\..\..\packages\Aardvark.Compiler.DomainTypes\lib\net45\Aardvark.Compiler.DomainTypes.dll</HintPath>
+          <HintPath>..\..\..\..\packages\Aardvark.Compiler.DomainTypes\lib\net45\Aardvark.Compiler.DomainTypes.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -234,22 +234,22 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="Aardvark.Rendering.GL">
-          <HintPath>..\..\..\packages\Aardvark.Rendering.GL\lib\net45\Aardvark.Rendering.GL.dll</HintPath>
+          <HintPath>..\..\..\..\packages\Aardvark.Rendering.GL\lib\net45\Aardvark.Rendering.GL.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
         <Reference Include="OpenTK">
-          <HintPath>..\..\..\packages\Aardvark.Rendering.GL\lib\net45\OpenTK.dll</HintPath>
+          <HintPath>..\..\..\..\packages\Aardvark.Rendering.GL\lib\net45\OpenTK.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
         <Reference Include="OpenTK.Compatibility">
-          <HintPath>..\..\..\packages\Aardvark.Rendering.GL\lib\net45\OpenTK.Compatibility.dll</HintPath>
+          <HintPath>..\..\..\..\packages\Aardvark.Rendering.GL\lib\net45\OpenTK.Compatibility.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
         <Reference Include="OpenTK.GLControl">
-          <HintPath>..\..\..\packages\Aardvark.Rendering.GL\lib\net45\OpenTK.GLControl.dll</HintPath>
+          <HintPath>..\..\..\..\packages\Aardvark.Rendering.GL\lib\net45\OpenTK.GLControl.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -260,7 +260,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="Aardvark.Rendering.Text">
-          <HintPath>..\..\..\packages\Aardvark.Rendering.Text\lib\net45\Aardvark.Rendering.Text.dll</HintPath>
+          <HintPath>..\..\..\..\packages\Aardvark.Rendering.Text\lib\net45\Aardvark.Rendering.Text.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -271,7 +271,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="Aardvark.Rendering.Vulkan">
-          <HintPath>..\..\..\packages\Aardvark.Rendering.Vulkan\lib\net45\Aardvark.Rendering.Vulkan.dll</HintPath>
+          <HintPath>..\..\..\..\packages\Aardvark.Rendering.Vulkan\lib\net45\Aardvark.Rendering.Vulkan.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -282,7 +282,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="Aardvark.SceneGraph">
-          <HintPath>..\..\..\packages\Aardvark.SceneGraph\lib\net45\Aardvark.SceneGraph.dll</HintPath>
+          <HintPath>..\..\..\..\packages\Aardvark.SceneGraph\lib\net45\Aardvark.SceneGraph.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -293,7 +293,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="Aardvark.SceneGraph.IO">
-          <HintPath>..\..\..\packages\Aardvark.SceneGraph.IO\lib\net45\Aardvark.SceneGraph.IO.dll</HintPath>
+          <HintPath>..\..\..\..\packages\Aardvark.SceneGraph.IO\lib\net45\Aardvark.SceneGraph.IO.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -304,7 +304,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="Xilium.CefGlue">
-          <HintPath>..\..\..\packages\Another.Unofficial.Xilium.CefGlue\lib\net40\Xilium.CefGlue.dll</HintPath>
+          <HintPath>..\..\..\..\packages\Another.Unofficial.Xilium.CefGlue\lib\net40\Xilium.CefGlue.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -315,7 +315,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="CefGlue.UnpackNativeDependencies">
-          <HintPath>..\..\..\packages\Another.Unofficial.Xilium.CefGlue.UnpackNativeDependencies\lib\net45\CefGlue.UnpackNativeDependencies.dll</HintPath>
+          <HintPath>..\..\..\..\packages\Another.Unofficial.Xilium.CefGlue.UnpackNativeDependencies\lib\net45\CefGlue.UnpackNativeDependencies.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -326,7 +326,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="Xilium.CefGlue.WindowsForms">
-          <HintPath>..\..\..\packages\Another.Unofficial.Xilium.CefGlue.WindowsForms\lib\net40\Xilium.CefGlue.WindowsForms.dll</HintPath>
+          <HintPath>..\..\..\..\packages\Another.Unofficial.Xilium.CefGlue.WindowsForms\lib\net40\Xilium.CefGlue.WindowsForms.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -337,7 +337,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="CommonMark">
-          <HintPath>..\..\..\packages\CommonMark.NET\lib\net45\CommonMark.dll</HintPath>
+          <HintPath>..\..\..\..\packages\CommonMark.NET\lib\net45\CommonMark.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -348,7 +348,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="DevILSharp">
-          <HintPath>..\..\..\packages\DevILSharp\lib\net45\DevILSharp.dll</HintPath>
+          <HintPath>..\..\..\..\packages\DevILSharp\lib\net45\DevILSharp.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -359,7 +359,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="FShade.Core">
-          <HintPath>..\..\..\packages\FShade.Core\lib\net45\FShade.Core.dll</HintPath>
+          <HintPath>..\..\..\..\packages\FShade.Core\lib\net45\FShade.Core.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -370,7 +370,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="FShade.GLSL">
-          <HintPath>..\..\..\packages\FShade.GLSL\lib\net45\FShade.GLSL.dll</HintPath>
+          <HintPath>..\..\..\..\packages\FShade.GLSL\lib\net45\FShade.GLSL.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -381,7 +381,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="FShade.Imperative">
-          <HintPath>..\..\..\packages\FShade.Imperative\lib\net45\FShade.Imperative.dll</HintPath>
+          <HintPath>..\..\..\..\packages\FShade.Imperative\lib\net45\FShade.Imperative.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -392,7 +392,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="FShade.SpirV">
-          <HintPath>..\..\..\packages\FShade.SpirV\lib\net45\FShade.SpirV.dll</HintPath>
+          <HintPath>..\..\..\..\packages\FShade.SpirV\lib\net45\FShade.SpirV.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -403,7 +403,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="FSharp.Core">
-          <HintPath>..\..\..\packages\FSharp.Core\lib\net40\FSharp.Core.dll</HintPath>
+          <HintPath>..\..\..\..\packages\FSharp.Core\lib\net40\FSharp.Core.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -414,7 +414,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="FSharp.Quotations.Evaluator">
-          <HintPath>..\..\..\packages\FSharp.Quotations.Evaluator\lib\net40\FSharp.Quotations.Evaluator.dll</HintPath>
+          <HintPath>..\..\..\..\packages\FSharp.Quotations.Evaluator\lib\net40\FSharp.Quotations.Evaluator.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -428,7 +428,7 @@
           <Paket>True</Paket>
         </Reference>
         <Reference Include="FsPickler">
-          <HintPath>..\..\..\packages\FsPickler\lib\net45\FsPickler.dll</HintPath>
+          <HintPath>..\..\..\..\packages\FsPickler\lib\net45\FsPickler.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -439,7 +439,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="FsPickler.Json">
-          <HintPath>..\..\..\packages\FsPickler.Json\lib\net45\FsPickler.Json.dll</HintPath>
+          <HintPath>..\..\..\..\packages\FsPickler.Json\lib\net45\FsPickler.Json.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -450,7 +450,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="GLSLangSharp">
-          <HintPath>..\..\..\packages\GLSLangSharp\lib\net45\GLSLangSharp.dll</HintPath>
+          <HintPath>..\..\..\..\packages\GLSLangSharp\lib\net45\GLSLangSharp.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -461,7 +461,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="Newtonsoft.Json">
-          <HintPath>..\..\..\packages\Newtonsoft.Json\lib\net45\Newtonsoft.Json.dll</HintPath>
+          <HintPath>..\..\..\..\packages\Newtonsoft.Json\lib\net45\Newtonsoft.Json.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -472,7 +472,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="ICSharpCode.SharpZipLib">
-          <HintPath>..\..\..\packages\SharpZipLib\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+          <HintPath>..\..\..\..\packages\SharpZipLib\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -483,7 +483,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="Suave">
-          <HintPath>..\..\..\packages\Suave\lib\net40\Suave.dll</HintPath>
+          <HintPath>..\..\..\..\packages\Suave\lib\net40\Suave.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -494,7 +494,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="System.Collections.Immutable">
-          <HintPath>..\..\..\packages\System.Collections.Immutable\lib\netstandard1.0\System.Collections.Immutable.dll</HintPath>
+          <HintPath>..\..\..\..\packages\System.Collections.Immutable\lib\netstandard1.0\System.Collections.Immutable.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -505,7 +505,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="System.Reactive.Core">
-          <HintPath>..\..\..\packages\System.Reactive.Core\lib\net45\System.Reactive.Core.dll</HintPath>
+          <HintPath>..\..\..\..\packages\System.Reactive.Core\lib\net45\System.Reactive.Core.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -516,7 +516,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="System.Reactive.Interfaces">
-          <HintPath>..\..\..\packages\System.Reactive.Interfaces\lib\net45\System.Reactive.Interfaces.dll</HintPath>
+          <HintPath>..\..\..\..\packages\System.Reactive.Interfaces\lib\net45\System.Reactive.Interfaces.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -527,7 +527,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="System.Reactive.Linq">
-          <HintPath>..\..\..\packages\System.Reactive.Linq\lib\net45\System.Reactive.Linq.dll</HintPath>
+          <HintPath>..\..\..\..\packages\System.Reactive.Linq\lib\net45\System.Reactive.Linq.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -538,7 +538,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="System.Runtime.InteropServices.RuntimeInformation">
-          <HintPath>..\..\..\packages\System.Runtime.InteropServices.RuntimeInformation\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+          <HintPath>..\..\..\..\packages\System.Runtime.InteropServices.RuntimeInformation\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -549,7 +549,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="AssimpNet">
-          <HintPath>..\..\..\packages\Unofficial.AssimpNet\lib\net45\AssimpNet.dll</HintPath>
+          <HintPath>..\..\..\..\packages\Unofficial.AssimpNet\lib\net45\AssimpNet.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -560,13 +560,13 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
       <ItemGroup>
         <Reference Include="LibTessDotNet">
-          <HintPath>..\..\..\packages\Unofficial.LibTessDotNet\lib\net45\LibTessDotNet.dll</HintPath>
+          <HintPath>..\..\..\..\packages\Unofficial.LibTessDotNet\lib\net45\LibTessDotNet.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
       </ItemGroup>
     </When>
   </Choose>
-  <Import Project="..\..\..\packages\Aardvark.Compiler.DomainTypes.MSBuild\build\Aardvark.Compiler.DomainTypes.MSBuild.targets" Condition="Exists('..\..\..\packages\Aardvark.Compiler.DomainTypes.MSBuild\build\Aardvark.Compiler.DomainTypes.MSBuild.targets')" Label="Paket" />
-  <Import Project="..\..\..\packages\NETStandard.Library\build\NETStandard.Library.targets" Condition="Exists('..\..\..\packages\NETStandard.Library\build\NETStandard.Library.targets')" Label="Paket" />
+  <Import Project="..\..\..\..\packages\Aardvark.Compiler.DomainTypes.MSBuild\build\Aardvark.Compiler.DomainTypes.MSBuild.targets" Condition="Exists('..\..\..\..\packages\Aardvark.Compiler.DomainTypes.MSBuild\build\Aardvark.Compiler.DomainTypes.MSBuild.targets')" Label="Paket" />
+  <Import Project="..\..\..\..\packages\NETStandard.Library\build\NETStandard.Library.targets" Condition="Exists('..\..\..\..\packages\NETStandard.Library\build\NETStandard.Library.targets')" Label="Paket" />
 </Project>

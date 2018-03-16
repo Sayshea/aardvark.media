@@ -22,7 +22,7 @@ let main argv =
     use form = new Form(Width = 800, Height = 600)
 
     let instance = 
-        App.app |> App.start
+        SilviaApp.app |> App.start
 
     // use can use whatever suave server to start you mutable app. 
     // startServerLocalhost is one of the convinience functions which sets up 

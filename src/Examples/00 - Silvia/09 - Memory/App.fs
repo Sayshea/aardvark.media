@@ -6,81 +6,85 @@ open Aardvark.UI.Primitives
 open Aardvark.Base
 open Aardvark.Base.Incremental
 open Aardvark.Base.Rendering
+
 open Model
 
-let update (model : Model) (msg : Message) =
-    match msg with
-        | Inc -> { model with value = model.value + 1 }
-        | NewName -> 
-            let newValue = System.Guid.NewGuid() |> string
-            { model with names = PList.append newValue model.names }
-        | Select s -> 
-            { model with selected = Some s }
+let size = 4
 
-let view (model : MModel) =
-    
-    let namesGui =
+let update (m:Model) (msg : Message) =
+    match msg with 
+        | Flip p -> m
+
+let view (m : MModel) =
+
+
+    let cell x y = failwith ""
+
+    let rowview  y=
         alist {
-            for name in model.names do
-                yield button [onClick (fun a -> Select name)] [text name]
-                yield br []
+            for x in [0..size] do
+                yield Incremental.td AttributeMap.empty (cell x y)
         }
 
-    let namesGui2 = 
-        model.names |> AList.collect (fun str -> 
-            AList.ofList [
-                text str; br []
+
+    let tableview = 
+        alist {
+            for y in [0..size] do
+                yield Incremental.tr AttributeMap.empty (rowview y)
+        }
+
+    require Html.semui ( 
+        body [][
+            div [][
+                h1 [][text "Memory"]
+
+                Incremental.table (AttributeMap.ofList [style "border-collapse:collapse; border: solid medium"]) tableview
             ]
-        )
-
-    let selected = 
-        let s = model.selected
-        let text = s |> Mod.map (fun realSelected -> 
-            match realSelected with
-                | None -> "nothing is selected"
-                | Some s -> s
-        )
-        Incremental.text text
-        
-    let selected2 = 
-        adaptive {
-            let! s = model.selected
-            match s with
-                | None -> return "ntohg"
-                | Some s -> return s
-        } |> Incremental.text   
-
-    body [] [
-        text "Hello World"
-        br []
-        button [onClick (fun _ -> Inc)] [text "Increment"]
-        text "    "
-        Incremental.text (model.value |> Mod.map string)
-        br []
-
-        br []
-        button [onClick (fun _ -> NewName)] [text "New Name"]
-        br []
-
-        text "names:"
-        br []
-        Incremental.div AttributeMap.empty namesGui
-        br []
-
-        text "selected: "
-        selected
-        br[]
-
-        img [
-            attribute "src" "https://upload.wikimedia.org/wikipedia/commons/6/67/SanWild17.jpg"; 
-            attribute "alt" "aardvark"
-            style "width: 100px"
         ]
-    ]
+    )
+
+//let generateBoard : hmap<pos,card> = 
+//    let rand = new System.Random()
+//
+//    let swap (a: _[]) x y =
+//        let tmp = a.[x]
+//        a.[x] <- a.[y]
+//        a.[y] <- tmp
+//
+//    // shuffle an array (in-place)
+//    let shuffle a =
+//        Array.iteri (fun i _ -> swap a i (rand.Next(i, Array.length a))) a
+//
+//    let size = 4
+//    let halfInitArray = seq { 1 .. (size * size / 2)} |> Seq.toList
+//    let rec doubleArray x = 
+//        match x with
+//        | [] -> []
+//        | x :: xs -> x :: x :: (doubleArray xs)
+//
+//    let initArray = (doubleArray halfInitArray)|> List.toArray
+//    
+//    shuffle initArray
+//    
+//    let board : hmap<pos,card> = hmap.Empty
+////    let x = 0
+////    let y = 0
+////    let board = HMap.add (x,y) {value = initArray.[(y-1) * size + (x-1)]; flipped = false} board
+//    
+//    for y in [1 .. size] do
+//        for x in [1 .. size] do
+//            let board = HMap.add (x,y) {value = initArray.[(y-1) * size + (x-1)]; flipped = false} board
+//    board       
+
+//type Brick = int
+//
+//let get (b : hmap<(int* int), Brick>) (x,y) = b.[y, x]
+// 
+//let set player (b : hmap<int*int,Brick>) (x,y) : hmap<int*int,Brick> =
+//    HMap.add (y,x) player b
 
 let threads (model : Model) = 
     ThreadPool.empty
-
 
 let app =                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
     {
@@ -88,9 +92,10 @@ let app =
         threads = threads 
         initial = 
             { 
-               value = 0
-               names = PList.ofList ["aardvark";"super"]
-               selected = None
+                numberFlipped = 0
+                board = hmap.Empty
+                firstFlipped = (0,0)
+                secondFlipped = (0,0)
             }
         update = update 
         view = view
