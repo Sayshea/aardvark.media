@@ -4,10 +4,13 @@ open Aardvark.Base
 open Aardvark.Base.Incremental
 open Aardvark.UI.Primitives
 
+open System
+
 type pos = int * int
 
 type Message = 
     | Flip of pos
+    | Reset
 
 type card =
     {
@@ -22,4 +25,7 @@ type Model =
         board : hmap<pos,card>
         firstFlipped : pos
         secondFlipped : pos
+        moves : int
+        timer : DateTime
+        infoText : string
     }
