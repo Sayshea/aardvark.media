@@ -69,6 +69,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "08 - Sudoku Solver", "Examp
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "09 - Memory", "Examples\00 - Silvia\09 - Memory\09 - Memory.fsproj", "{84F35393-E943-4903-9358-1655717990A6}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "10 - Treeview", "Examples\00 - Silvia\10 - Treeview\10 - Treeview.fsproj", "{FED9040E-ABD6-4257-A4F4-593AF8BB0B57}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -195,6 +197,10 @@ Global
 		{84F35393-E943-4903-9358-1655717990A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84F35393-E943-4903-9358-1655717990A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84F35393-E943-4903-9358-1655717990A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FED9040E-ABD6-4257-A4F4-593AF8BB0B57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FED9040E-ABD6-4257-A4F4-593AF8BB0B57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FED9040E-ABD6-4257-A4F4-593AF8BB0B57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FED9040E-ABD6-4257-A4F4-593AF8BB0B57}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -222,5 +228,6 @@ Global
 		{7F4BF597-982F-4A30-9B02-FC37904A0B3B} = {87275308-069C-44FD-8EF3-9C49F2E37154}
 		{8C97619F-DE24-4411-9D3F-E940A4648FA7} = {87275308-069C-44FD-8EF3-9C49F2E37154}
 		{84F35393-E943-4903-9358-1655717990A6} = {87275308-069C-44FD-8EF3-9C49F2E37154}
+		{FED9040E-ABD6-4257-A4F4-593AF8BB0B57} = {87275308-069C-44FD-8EF3-9C49F2E37154}
 	EndGlobalSection
 EndGlobal
