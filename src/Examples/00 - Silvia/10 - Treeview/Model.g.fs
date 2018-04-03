@@ -190,8 +190,8 @@ module Mutable =
         
         static member private CreateValue(__model : Model.Tree) = 
             match __model with
-                | Node(value, properties, children) -> MNode(__model, value, properties, children) :> MTree
-                | Leaf(value, properties) -> MLeaf(__model, value, properties) :> MTree
+                | Node(item1, item2, item3) -> MNode(__model, item1, item2, item3) :> MTree
+                | Leaf(item1, item2) -> MLeaf(__model, item1, item2) :> MTree
         
         static member Create(v : Model.Tree) =
             ResetMod.Create(MTree.CreateValue v) :> IMod<_>
@@ -202,16 +202,16 @@ module Mutable =
             if not (m.GetValue().TryUpdate v) then
                 m.Update(MTree.CreateValue v)
     
-    and private MNode(__initial : Model.Tree, value : Model.NodeValue, properties : Model.Properties, children : Aardvark.Base.plist<Model.Tree>) =
+    and private MNode(__initial : Model.Tree, item1 : Model.NodeValue, item2 : Model.Properties, item3 : Aardvark.Base.plist<Model.Tree>) =
         inherit MTree()
         
         let mutable __current = __initial
-        let _value = MNodeValue.Create(value)
-        let _properties = MProperties.Create(properties)
-        let _children = ResetMapList(children, (fun _ e -> MTree.Create(e)), (fun (m,e) -> MTree.Update(m, e)))
-        member x.value = _value
-        member x.properties = _properties
-        member x.children = _children :> alist<_>
+        let _item1 = MNodeValue.Create(item1)
+        let _item2 = MProperties.Create(item2)
+        let _item3 = ResetMapList(item3, (fun _ e -> MTree.Create(e)), (fun (m,e) -> MTree.Update(m, e)))
+        member x.item1 = _item1
+        member x.item2 = _item2
+        member x.item3 = _item3 :> alist<_>
         
         override x.ToString() = __current.ToString()
         override x.AsString = sprintf "%A" __current
@@ -221,22 +221,22 @@ module Mutable =
                 true
             else
                 match __model with
-                    | Node(value,properties,children) -> 
+                    | Node(item1,item2,item3) -> 
                         __current <- __model
-                        MNodeValue.Update(_value, value)
-                        MProperties.Update(_properties, properties)
-                        _children.Update(children)
+                        MNodeValue.Update(_item1, item1)
+                        MProperties.Update(_item2, item2)
+                        _item3.Update(item3)
                         true
                     | _ -> false
     
-    and private MLeaf(__initial : Model.Tree, value : Model.LeafValue, properties : Model.LeafProperties) =
+    and private MLeaf(__initial : Model.Tree, item1 : Model.LeafValue, item2 : Model.LeafProperties) =
         inherit MTree()
         
         let mutable __current = __initial
-        let _value = MLeafValue.Create(value)
-        let _properties = MLeafProperties.Create(properties)
-        member x.value = _value
-        member x.properties = _properties
+        let _item1 = MLeafValue.Create(item1)
+        let _item2 = MLeafProperties.Create(item2)
+        member x.item1 = _item1
+        member x.item2 = _item2
         
         override x.ToString() = __current.ToString()
         override x.AsString = sprintf "%A" __current
@@ -246,10 +246,10 @@ module Mutable =
                 true
             else
                 match __model with
-                    | Leaf(value,properties) -> 
+                    | Leaf(item1,item2) -> 
                         __current <- __model
-                        MLeafValue.Update(_value, value)
-                        MLeafProperties.Update(_properties, properties)
+                        MLeafValue.Update(_item1, item1)
+                        MLeafProperties.Update(_item2, item2)
                         true
                     | _ -> false
     
@@ -258,13 +258,114 @@ module Mutable =
     module MTreePatterns =
         let (|MNode|MLeaf|) (m : MTree) =
             match m with
-            | :? MNode as v -> MNode(v.value,v.properties,v.children)
-            | :? MLeaf as v -> MLeaf(v.value,v.properties)
+            | :? MNode as v -> MNode(v.item1,v.item2,v.item3)
+            | :? MLeaf as v -> MLeaf(v.item1,v.item2)
             | _ -> failwith "impossible"
     
     
     
     
+    
+    
+    type MNodeStuff(__initial : Model.NodeStuff) =
+        inherit obj()
+        let mutable __current : Aardvark.Base.Incremental.IModRef<Model.NodeStuff> = Aardvark.Base.Incremental.EqModRef<Model.NodeStuff>(__initial) :> Aardvark.Base.Incremental.IModRef<Model.NodeStuff>
+        let _value = MNodeValue.Create(__initial.value)
+        let _children = MList.Create(__initial.children, (fun v -> MTree.Create(v)), (fun (m,v) -> MTree.Update(m, v)), (fun v -> v))
+        let _properties = MProperties.Create(__initial.properties)
+        
+        member x.value = _value
+        member x.children = _children :> alist<_>
+        member x.properties = _properties
+        
+        member x.Current = __current :> IMod<_>
+        member x.Update(v : Model.NodeStuff) =
+            if not (System.Object.ReferenceEquals(__current.Value, v)) then
+                __current.Value <- v
+                
+                MNodeValue.Update(_value, v.value)
+                MList.Update(_children, v.children)
+                MProperties.Update(_properties, v.properties)
+                
+        
+        static member Create(__initial : Model.NodeStuff) : MNodeStuff = MNodeStuff(__initial)
+        static member Update(m : MNodeStuff, v : Model.NodeStuff) = m.Update(v)
+        
+        override x.ToString() = __current.Value.ToString()
+        member x.AsString = sprintf "%A" __current.Value
+        interface IUpdatable<Model.NodeStuff> with
+            member x.Update v = x.Update v
+    
+    
+    
+    [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+    module NodeStuff =
+        [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+        module Lens =
+            let value =
+                { new Lens<Model.NodeStuff, Model.NodeValue>() with
+                    override x.Get(r) = r.value
+                    override x.Set(r,v) = { r with value = v }
+                    override x.Update(r,f) = { r with value = f r.value }
+                }
+            let children =
+                { new Lens<Model.NodeStuff, Aardvark.Base.plist<Model.Tree>>() with
+                    override x.Get(r) = r.children
+                    override x.Set(r,v) = { r with children = v }
+                    override x.Update(r,f) = { r with children = f r.children }
+                }
+            let properties =
+                { new Lens<Model.NodeStuff, Model.Properties>() with
+                    override x.Get(r) = r.properties
+                    override x.Set(r,v) = { r with properties = v }
+                    override x.Update(r,f) = { r with properties = f r.properties }
+                }
+    
+    
+    type MLeafStuff(__initial : Model.LeafStuff) =
+        inherit obj()
+        let mutable __current : Aardvark.Base.Incremental.IModRef<Model.LeafStuff> = Aardvark.Base.Incremental.EqModRef<Model.LeafStuff>(__initial) :> Aardvark.Base.Incremental.IModRef<Model.LeafStuff>
+        let _value = MLeafValue.Create(__initial.value)
+        let _properties = MLeafProperties.Create(__initial.properties)
+        
+        member x.value = _value
+        member x.properties = _properties
+        
+        member x.Current = __current :> IMod<_>
+        member x.Update(v : Model.LeafStuff) =
+            if not (System.Object.ReferenceEquals(__current.Value, v)) then
+                __current.Value <- v
+                
+                MLeafValue.Update(_value, v.value)
+                MLeafProperties.Update(_properties, v.properties)
+                
+        
+        static member Create(__initial : Model.LeafStuff) : MLeafStuff = MLeafStuff(__initial)
+        static member Update(m : MLeafStuff, v : Model.LeafStuff) = m.Update(v)
+        
+        override x.ToString() = __current.Value.ToString()
+        member x.AsString = sprintf "%A" __current.Value
+        interface IUpdatable<Model.LeafStuff> with
+            member x.Update v = x.Update v
+    
+    
+    
+    [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+    module LeafStuff =
+        [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+        module Lens =
+            let value =
+                { new Lens<Model.LeafStuff, Model.LeafValue>() with
+                    override x.Get(r) = r.value
+                    override x.Set(r,v) = { r with value = v }
+                    override x.Update(r,f) = { r with value = f r.value }
+                }
+            let properties =
+                { new Lens<Model.LeafStuff, Model.LeafProperties>() with
+                    override x.Get(r) = r.properties
+                    override x.Set(r,v) = { r with properties = v }
+                    override x.Update(r,f) = { r with properties = f r.properties }
+                }
     
     
     type MTreeModel(__initial : Model.TreeModel) =
