@@ -13,20 +13,22 @@ open Model
 
 open System
 
+//let inline (==>) a b = Aardvark.UI.Attributes.attribute a b
+
 let defaultProperties = { isExpanded = true; isSelected = false }
 //let initialValues = { data = Tree.node {name = "root"; unit = ""} defaultProperties PList.empty }
 let initialValues = {
     data = 
-        Tree.node { name = "root"; unit = "" } defaultProperties <| PList.ofList [
-            Tree.node { name = "node 0"; unit = "°C" } defaultProperties <| PList.ofList [
+        Tree.node { name = "root"; unit = "" } defaultProperties 1 <| PList.ofList [
+            Tree.node { name = "node 0"; unit = "°C" } defaultProperties 1 <| PList.ofList [
 //                Leaf ({ name = "leaf 00"; value = 20 }, { isSelected = false })
 //                Leaf ({ name = "leaf 01"; value = 22 }, { isSelected = false })
-            ]
-            Tree.node { name = "node 1"; unit = "%" } defaultProperties <| PList.ofList [
+            ] 
+            Tree.node { name = "node 1"; unit = "%" } defaultProperties 1 <| PList.ofList [
 //                Leaf ({ name = "leaf 01"; value = 84 }, { isSelected = false })
 //                Leaf ({ name = "leaf 11"; value = 54 }, { isSelected = false })
-                Tree.node { name = "node 01"; unit = "%" } defaultProperties <| PList.ofList [
-                    Leaf ({ name = "leaf 001"; value = 12 }, { isSelected = false })
+                Tree.node { name = "node 01"; unit = "%" } defaultProperties 1 <| PList.ofList [
+                    Leaf ({ name = "leaf 001"; value = 12 }, { isSelected = false }, 1)
                 ]
             ]
         ]
@@ -40,10 +42,10 @@ let updateAt (p : list<Index>) (f : Tree -> Tree) (t : Tree) =
             | [] -> f t
             | x::rest -> 
                 match t with
-                    | Leaf (l, p) -> Leaf (l, p)
-                    | Node(l,p,xs) -> 
+                    | Leaf (l, p, i) -> Leaf (l, p, i + 1 )
+                    | Node(l,p,i,xs) -> 
                         match PList.tryGet x xs with
-                            | Some c -> Node(l,p, PList.set x (go rest c) xs)
+                            | Some c -> Node(l,p, i + 1, PList.set x (go rest c) xs)
                             | None   -> t
     go (List.rev p) t
 
@@ -52,12 +54,12 @@ let getItem (p : list<Index>) (t : Tree) =
         match p with
             | [] -> 
                 match t with
-                    | Leaf (l, p) -> Leaf (l,p)
-                    | Node (l,p,xs) -> Node (l,p,xs)
+                    | Leaf (l, p, i) -> Leaf (l,p, i)
+                    | Node (l,p,i,xs) -> Node (l,p,i,xs)
             | x::rest -> 
                 match t with
-                    | Leaf (l, p) -> failwith "you shoudn't be able to get to this leaf!"//Leaf (l, p)
-                    | Node(l,p,xs) -> 
+                    | Leaf (l, p, i) -> failwith "you shoudn't be able to get to this leaf!"//Leaf (l, p)
+                    | Node(l,p,i,xs) -> 
                         match PList.tryGet x xs with
                             | Some c -> go rest c
                             | None   -> failwith "no item found"
@@ -68,10 +70,10 @@ let getItem (p : list<Index>) (t : Tree) =
 let flipSelected p t b = 
     updateAt p (
         function 
-            | Leaf (l, p) -> Leaf (l, {p with isSelected = b })
-            | Node (l, p, xs) -> Node (l, { p with 
+            | Leaf (l, p, i) -> Leaf (l, {p with isSelected = b }, i + 1 )
+            | Node (l, p, i, xs) -> Node (l, { p with 
                                                 isSelected = b 
-                                                isExpanded = p.isExpanded }, xs)
+                                                isExpanded = p.isExpanded }, i + 1 , xs)
         ) t
 
 let selectUpdate (oldSelected : plist<List<Index>>) (path : plist<List<Index>>) (tree : Tree) =
@@ -87,7 +89,7 @@ let deleteItem (t : Tree) (itempath : List<Index>) =
     let parentPath i = List.skip 1 i
     let tree = updateAt (parentPath itempath) (
                 function | Leaf _ -> failwith "The parent of a leaf must be a node and not a leaf!"
-                            | Node (l, p, xs) -> Node (l,p, (PList.remove itempath.Head xs) )
+                            | Node (l, p, i, xs) -> Node (l,p, i + 1, (PList.remove itempath.Head xs) )
                 ) t
     tree
 
@@ -97,22 +99,23 @@ let rec update (m:TreeModel) (msg : Message) =
         { m with 
             data = 
                 updateAt path (
-                    function | Leaf (l, p) -> Leaf (l, p)
-                                | Node (l, p, xs) -> Node (l, {p with 
+                    function | Leaf (l, p, i) -> Leaf (l, p, i)
+                                | Node (l, p, i, xs) -> Node (l, 
+                                                        {p with 
                                                                 isExpanded = not p.isExpanded 
-                                                                isSelected = p.isSelected }, xs )
+                                                                isSelected = p.isSelected }, i, xs )
                 ) m.data
         }
     | AddLeaf path -> 
         let genValue =
             let rnd = Random()
             rnd.Next(100)
-        let newLeaf = Leaf ({ name = "Generated Leaf"; value = genValue }, { isSelected = false })
+        let newLeaf = Leaf ({ name = "Generated Leaf"; value = genValue }, { isSelected = false }, 1)
         { m with 
             data = 
                 updateAt path (
                     function | Leaf _ -> failwith "You can't add anything to a leaf!"
-                                | Node (l, p, xs) -> Node (l, p, PList.append (newLeaf) xs)
+                                | Node (l, p, i, xs) -> Node (l, p, i + 1, PList.append (newLeaf) xs)
                 ) m.data
         }
     | AddNode path -> 
@@ -120,12 +123,12 @@ let rec update (m:TreeModel) (msg : Message) =
             let rnd = Random()
             let arr = [|"%"; "°C"; "V"; "MHz"; "GB"|]
             arr.[rnd.Next(arr.Length)]
-        let newNode = Tree.node { name = "Generated Node"; unit = genUnit } defaultProperties PList.empty
+        let newNode = Tree.node { name = "Generated Node"; unit = genUnit } defaultProperties 1 PList.empty
         { m with 
             data = 
                 updateAt path (
                     function | Leaf _ -> failwith "You can't add anything to a leaf!"
-                                | Node (l, p, xs) -> Node (l, p, PList.append (newNode) xs)
+                                | Node (l, p, i, xs) -> Node (l, p, i + 1, PList.append (newNode) xs)
                 ) m.data
         }
     | DeleteItem path -> 
@@ -165,10 +168,14 @@ let rec update (m:TreeModel) (msg : Message) =
     | Keyup Keys.LeftCtrl -> { m with strgDown = false }
     | Keydown Keys.RightCtrl -> { m with strgDown = true }
     | Keyup Keys.RightCtrl -> { m with strgDown = false }
+    | DragStart p ->
+        let test = m
+        m
     | DragStop (source, target) ->
 //        printfn "dragstop."
         printfn "source: %A" source
         printfn "target: %A" target
+        //TODO: need to deal with the old selected
         let AddItem tree s t =
             let parentPath p = List.skip 1 p // gives back the path of the parent of an item
 
@@ -182,12 +189,12 @@ let rec update (m:TreeModel) (msg : Message) =
                     let parent = parentPath t
                     updateAt parent (
                         function | Leaf _ -> failwith "You can't add anything to a leaf!"
-                                    | Node (l, p, xs) -> Node (l, p, PList.append (item tree) xs)
+                                    | Node (l, p, i, xs) -> Node (l, p, i, PList.append (item tree) xs)
                         ) tree
-                | Node (l, p, xs) -> 
+                | Node (l, p, i, xs) -> 
                     updateAt t (
                         function | Leaf _ -> failwith "You can't add anything to a leaf!"
-                                    | Node (l, p, xs) -> Node (l, p, PList.append (item tree) xs)
+                                    | Node (l, p, i, xs) -> Node (l, p, i, PList.append (item tree) xs)
                         ) tree
 
 //        let AddNode ( model : TreeModel ) = 
@@ -227,7 +234,7 @@ let dragStop (makeEvent : List<Index> -> 'a) =
             makeEvent path
         )
 
-let leafViewText (leaf : MLeafValue) (p : MLeafProperties) (path : List<Index> ) =
+let leafViewText (leaf : MLeafValue) (p : MLeafProperties) (path : List<Index> ) j  =
     let leaftext = 
         let attr = 
             alist {
@@ -243,6 +250,8 @@ let leafViewText (leaf : MLeafValue) (p : MLeafProperties) (path : List<Index> )
                 yield Incremental.text (leaf.name)
                 yield text " = "
                 yield Incremental.text (leaf.value |> Mod.map string)
+                yield text " "
+                yield Incremental.text (j |> Mod.map string)
             ]
             yield button [ onClick (fun _ -> DeleteItem path) ][text "x"]
         }
@@ -259,7 +268,7 @@ let leafViewText (leaf : MLeafValue) (p : MLeafProperties) (path : List<Index> )
             ]) leaftext
 
 
-let nodeViewText (node : MNodeValue) (p : MProperties) (path : List<Index> ) =
+let nodeViewText (node : MNodeValue) (p : MProperties) (path : List<Index> ) j =
     let nodetext = 
         let attr = 
             alist {
@@ -282,7 +291,8 @@ let nodeViewText (node : MNodeValue) (p : MProperties) (path : List<Index> ) =
                     yield Incremental.text (node.name)
                     yield text " [Unit: "
                     yield Incremental.text (node.unit)
-                    yield text "]"
+                    yield text "] "
+                    yield Incremental.text (j |> Mod.map string)
                 ]
                 yield button [ onClick (fun _ -> AddNode path) ][text "AddNode"]
                 yield button [ onClick (fun _ -> AddLeaf path) ][text "AddLeaf"]
@@ -295,11 +305,16 @@ let rec traverseTree path (model : IMod<MTree>) =
     alist {
         let! model = model
         match model with
-        | MLeaf (l, p) -> 
-            let! isSelected = p.isSelected
-            yield (leafViewText l p path)
-        | MNode (v, p, c) -> 
-            let! isSelected = p.isSelected
+        | MLeaf (l, p, i) -> 
+            //let! isSelected = p.isSelected
+
+            let! version = i
+
+            yield (leafViewText l p path i)
+        | MNode (v, p, i, c) -> 
+            //let! isSelected = p.isSelected
+            
+            let! version = i
             
             let nodeAttributes = 
                 amap {
@@ -330,14 +345,20 @@ let rec traverseTree path (model : IMod<MTree>) =
             | [] -> 
                 yield div [ clazz "item"] [
                     button [ onClick (fun _ -> AddNode path) ][text "AddNode"]
-                    Incremental.div leafAttributes children
-                ]
+                    Incremental.div leafAttributes 
+                        <| alist { yield! children }
+                    ]
             | _ -> 
                 yield div [ clazz "item"] [
                     Incremental.i nodeAttributes AList.empty
                     div [ clazz "content" ][
-                        div [ clazz "header" ] [(nodeViewText v p path)]
-                        Incremental.div leafAttributes children
+                        div [ clazz "header" ] [(nodeViewText v p path i)]
+                        Incremental.div leafAttributes 
+                        <| alist {
+                            //let! isExpanded = p.isExpanded
+                            //if isExpanded then 
+                                yield! children
+                        }
                     ]
                 ]
     }

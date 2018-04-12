@@ -6,7 +6,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{84f35393-e943-4903-9358-1655717990a6}</ProjectGuid>
+    <ProjectGuid>{856b9a55-eb0a-463b-818e-76135db3c12a}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>_01___Inc</RootNamespace>
     <AssemblyName>Inc</AssemblyName>
@@ -72,7 +72,9 @@
     <Compile Include="Program.fs" />
     <None Include="App.config" />
     <None Include="paket.references" />
-    <Content Include="memory.js" />
+    <Content Include="dragDropTree.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

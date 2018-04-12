@@ -15,6 +15,7 @@ type Message =
     | Keydown of key : Keys
     | Keyup of key: Keys
     | StrgSelect of List<Index>
+    | DragStart of List<Index>
     | DragStop of List<Index>*List<Index>
     | Nothing
 
@@ -46,26 +47,20 @@ type LeafProperties =
     }
 
 [<DomainType>]
+type Version =
+    {
+        version : int
+    }
+
+[<DomainType>]
 type Tree =
-    | Node of NodeValue * Properties * plist<Tree>
-    | Leaf of LeafValue * LeafProperties
-    
-and [<DomainType>] NodeStuff =
-    { 
-        value: NodeValue
-        children: plist<Tree>
-        properties : Properties
-    }
-    
-and [<DomainType>] LeafStuff =
-    { 
-        value: LeafValue
-        properties : LeafProperties
-    }
+    | Node of NodeValue * Properties * int * plist<Tree> 
+    | Leaf of LeafValue * LeafProperties * int
+
 [<AutoOpen; CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module Tree =
-    let node v p c = Node (v,p,c) //{ value = v; children = c; properties = p }
-    let leaf v p = Leaf (v,p)//{ value = v; properties = p }
+    let node v p i c = Node (v,p,i,c) //{ value = v; children = c; properties = p }
+    let leaf v p i = Leaf (v,p,i)//{ value = v; properties = p }
 
 [<DomainType>]
 type TreeModel = 
