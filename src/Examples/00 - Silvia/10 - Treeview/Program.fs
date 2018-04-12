@@ -24,6 +24,8 @@ let main argv =
     let instance = 
         App.app |> App.start
 
+    Aardvark.UI.Config.shouldPrintDOMUpdates <- true
+
     // use can use whatever suave server to start you mutable app. 
     // startServerLocalhost is one of the convinience functions which sets up 
     // a server without much boilerplate.

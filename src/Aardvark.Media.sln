@@ -73,6 +73,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "10 - Treeview", "Examples\0
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "10 - Treeview with Versions", "Examples\00 - Silvia\11 - Treeview with Versions\10 - Treeview with Versions.fsproj", "{856B9A55-EB0A-463B-818E-76135DB3C12A}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aardvark.Cef.WinForms.Process", "Aardvark.Cef.WinForms.Process\Aardvark.Cef.WinForms.Process.fsproj", "{EDE32464-755B-415A-B0CA-CDA89F49F6F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -207,6 +209,10 @@ Global
 		{856B9A55-EB0A-463B-818E-76135DB3C12A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{856B9A55-EB0A-463B-818E-76135DB3C12A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{856B9A55-EB0A-463B-818E-76135DB3C12A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDE32464-755B-415A-B0CA-CDA89F49F6F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDE32464-755B-415A-B0CA-CDA89F49F6F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDE32464-755B-415A-B0CA-CDA89F49F6F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDE32464-755B-415A-B0CA-CDA89F49F6F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

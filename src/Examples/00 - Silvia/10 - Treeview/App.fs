@@ -83,9 +83,11 @@ let selectUpdate (oldSelected : plist<List<Index>>) (path : plist<List<Index>>) 
     let t = changeSelected oldSelected tree false
     changeSelected path t true
 
+
+
 let deleteItem (t : Tree) (itempath : List<Index>) = 
-    let parentPath i = List.skip 1 i
-    let tree = updateAt (parentPath itempath) (
+    let parentPath = List.skip 1 itempath
+    let tree = updateAt parentPath (
                 function | Leaf _ -> failwith "The parent of a leaf must be a node and not a leaf!"
                             | Node (l, p, xs) -> Node (l,p, (PList.remove itempath.Head xs) )
                 ) t
@@ -144,7 +146,7 @@ let rec update (m:TreeModel) (msg : Message) =
                     | false -> removeSelected (PList.removeAt 0 selected) (PList.append c newSelected)
         { m with 
             data = deleteItem m.data path
-            selected = removeSelected m.selected PList.empty
+            //selected = removeSelected m.selected PList.empty
         }
     | Selected path ->
         match m.strgDown with
@@ -230,20 +232,20 @@ let dragStop (makeEvent : List<Index> -> 'a) =
 let leafViewText (leaf : MLeafValue) (p : MLeafProperties) (path : List<Index> ) =
     let leaftext = 
         let attr = 
-            alist {
+            amap {
                 let! isSelected = p.isSelected
                 match isSelected with
                 | true -> yield attribute "style" highlightStyle
                 | false -> yield attribute "style" ""
                 yield onMouseClick (fun _ -> Selected path)
-            } |> AList.toList
+            }
         alist {
-            yield span attr [
+            yield Incremental.span (AttributeMap.ofAMap attr) <| alist {
                 yield i [ clazz "file icon";  ] []
                 yield Incremental.text (leaf.name)
                 yield text " = "
                 yield Incremental.text (leaf.value |> Mod.map string)
-            ]
+            }
             yield button [ onClick (fun _ -> DeleteItem path) ][text "x"]
         }
     let p = pickler.PickleToString path
@@ -319,9 +321,9 @@ let rec traverseTree path (model : IMod<MTree>) =
                     | false -> yield style "hidden"
                 } |> AttributeMap.ofAMap
 
-            let! asd = (c |> AList.toMod)
-
-            printfn "%A" asd
+//            let! asd = (c |> AList.toMod)
+//
+//            printfn "%A" asd
 
             let children = AList.collecti (fun i v -> traverseTree (i::path) v) c
 
