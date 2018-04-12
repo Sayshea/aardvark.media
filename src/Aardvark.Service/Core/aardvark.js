@@ -126,6 +126,8 @@ class Renderer {
         this.isClosed = false;
         this.loading = true;
 
+        this.depthCallbacks = [];
+
         this.init();
     }
 
@@ -230,10 +232,21 @@ class Renderer {
 
         this.img.oncontextmenu = function (e) { e.preventDefault(); };
 
-        $(this.div).resize(function () {
-            self.render();
-        });
-
+        var $self = $(this.div);
+        var w = $self.width();
+        var h = $self.height();
+        var check = function () {
+            var cw = $self.width();
+            var ch = $self.height();
+            if(cw != w || ch != h)
+            {
+                w = cw;
+                h = ch;
+                self.render();
+            }
+        };
+        check();
+        setInterval(check, 50);
     }
 
     change(scene, samples) {
@@ -428,6 +441,11 @@ class Renderer {
         }
     }
 
+    getWorldPosition(pixel, callback) {
+        this.depthCallbacks.push({ pixel: pixel, callback: callback });
+        this.send(JSON.stringify({ Case: "RequestWorldPosition", pixel: { X: pixel.x, Y: pixel.y } }));
+    }
+
     received(msg) {
         if (msg.data instanceof Blob) {
             var now = performance.now();
@@ -481,6 +499,13 @@ class Renderer {
             if (o.Case === "Invalidate") {
                 // TODO: what if not visible??
                 this.render();
+            }
+            else if (o.Case === "WorldPosition" && o.pos) {
+                if (this.depthCallbacks.length > 0) {
+                    var cb = this.depthCallbacks[0];
+                    cb.callback(o.pos);
+                    this.depthCallbacks.splice(0, 1);
+                }
             }
             else if (o.Case === "Subscribe") {
                 var evt = o.eventName;
@@ -558,96 +583,96 @@ if (!aardvark.openFileDialog) {
         alert("Aardvark openFileDialog is not yet available");
     };
 
-    //var refs =
-    //    [
-    //        { kind: "stylesheet", name: "semui-css", url: "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.css" },
-    //        { kind: "script", name: "semui-js", url: "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.js" },
-    //        { kind: "stylesheet", name: "jtree-base", url: "https://cdnjs.cloudflare.com/ajax/libs/jstree/3.1.1/themes/default/style.min.css" },
-    //        { kind: "stylesheet", name: "jtree-dark", url: "https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.3/themes/default-dark/style.min.css" },
-    //        { kind: "script", name: "jstree", url: "https://cdnjs.cloudflare.com/ajax/libs/jstree/3.1.1/jstree.min.js" },
-    //        { kind: "script", name: "tablesort", url: "https://semantic-ui.com/javascript/library/tablesort.js" },
-    //        { kind: "script", name: "colresize", url: "http://www.bacubacu.com/colresizable/js/colResizable-1.6.min.js" },
-    //        { kind: "stylesheet", name: "aardfs-css", url: aardvark.getScriptRelativeUrl("http", "aardfs.css") },
-    //        { kind: "script", name: "aardfs-js", url: aardvark.getScriptRelativeUrl("http", "aardfs.js") },
-    //    ]
+    var refs =
+        [
+            { kind: "stylesheet", name: "semui-css", url: "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.css" },
+            { kind: "script", name: "semui-js", url: "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.js" },
+            { kind: "stylesheet", name: "jtree-base", url: "https://cdnjs.cloudflare.com/ajax/libs/jstree/3.1.1/themes/default/style.min.css" },
+            { kind: "stylesheet", name: "jtree-dark", url: "https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.3/themes/default-dark/style.min.css" },
+            { kind: "script", name: "jstree", url: "https://cdnjs.cloudflare.com/ajax/libs/jstree/3.1.1/jstree.min.js" },
+            { kind: "script", name: "tablesort", url: "https://semantic-ui.com/javascript/library/tablesort.js" },
+            { kind: "script", name: "colresize", url: "http://www.bacubacu.com/colresizable/js/colResizable-1.6.min.js" },
+            { kind: "stylesheet", name: "aardfs-css", url: aardvark.getScriptRelativeUrl("http", "aardfs.css") },
+            { kind: "script", name: "aardfs-js", url: aardvark.getScriptRelativeUrl("http", "aardfs.js") },
+        ]
 
-    //$(document).ready(function () {
-
-
-    //    aardvark.addReferences(refs, function () {
-    //        var modal = document.getElementById("filebrowser-modal");
-    //        if (!modal) {
-    //            var root = document.createElement("div");
-    //            root.setAttribute("id", "filebrowser-modal");
-    //            root.setAttribute("class", "ui modal");
-    //            $(root).html(
-    //                "<div class='content'>" +
-    //                "	<div id='filebrowser-browser'>" +
-    //                "	</div>" +
-    //                "</div>" +
-    //                "	<div class='actions'>" +
-    //                "		<div class='ui approve button'>OK</div>" +
-    //                "		<div class='ui cancel button'>Cancel</div>" +
-    //                "	</div>" +
-    //                "</div>"
-    //            );
-
-    //            document.body.appendChild(root);
+    $(document).ready(function () {
 
 
-    //            modal = root;
+        aardvark.addReferences(refs, function () {
+            var modal = document.getElementById("filebrowser-modal");
+            if (!modal) {
+                var root = document.createElement("div");
+                root.setAttribute("id", "filebrowser-modal");
+                root.setAttribute("class", "ui modal");
+                $(root).html(
+                    "<div class='content'>" +
+                    "	<div id='filebrowser-browser'>" +
+                    "	</div>" +
+                    "</div>" +
+                    "	<div class='actions'>" +
+                    "		<div class='ui approve button'>OK</div>" +
+                    "		<div class='ui cancel button'>Cancel</div>" +
+                    "	</div>" +
+                    "</div>"
+                );
 
-    //        }
+                document.body.appendChild(root);
 
-    //        console.debug("[FS] filebrowser installed")
-    //        aardvark.openFileDialog = function (openFileConfig, callback) {
 
-    //            // if only one argument
-    //            if (!callback) {
-    //                callback = openFileConfig;
-    //                openFileConfig = {};
-    //            }
+                modal = root;
 
-    //            if (!openFileConfig.mode) openFileConfig.mode = "file";
-    //            if (!openFileConfig.startPath) openFileConfig.startPath = "/";
-    //            if (!openFileConfig.title) openFileConfig.title = "Open File";
-    //            if (!openFileConfig.filters) openFileConfig.filters = [];
-    //            if (!openFileConfig.activeFilter) openFileConfig.activeFilter = -1;
-    //            if (!openFileConfig.allowMultiple) openFileConfig.allowMultiple = false;
+            }
 
-    //            var config =
-    //            {
-    //                url: aardvark.getScriptRelativeUrl("http", "fs"),
-    //                caching: true,
-    //                folderSelect: (openFileConfig.mode === "folder"),
-    //                fileSelect: (openFileConfig.mode === "file"),
-    //                hideFiles: false,
-    //                onselect: function (path) {  },
-    //                submit: function (path) { callback([path]); $(modal).modal('hide'); },
-    //                cancel: function () { console.log("[FS] cancel"); }
-    //            };
+            console.debug("[FS] filebrowser installed")
+            aardvark.openFileDialog = function (openFileConfig, callback) {
 
-    //            var browser = new FileBrowser(config);
-    //            var $browser = $('#filebrowser-browser');
-    //            $browser.filebrowser(browser);
-    //            $browser.height(screen.height - 600);
+                // if only one argument
+                if (!callback) {
+                    callback = openFileConfig;
+                    openFileConfig = {};
+                }
 
-    //            $(modal).modal({
-    //                keyboardShortcuts: true,
-    //                blurring: true,
-    //                onDeny: function () {
-    //                    browser.cancel();
-    //                    return true;
-    //                },
-    //                onApprove: function () {
-    //                    browser.submit();
-    //                }
-    //            });
-    //            $(modal).modal('show');
+                if (!openFileConfig.mode) openFileConfig.mode = "file";
+                if (!openFileConfig.startPath) openFileConfig.startPath = "/";
+                if (!openFileConfig.title) openFileConfig.title = "Open File";
+                if (!openFileConfig.filters) openFileConfig.filters = [];
+                if (!openFileConfig.activeFilter) openFileConfig.activeFilter = -1;
+                if (!openFileConfig.allowMultiple) openFileConfig.allowMultiple = false;
 
-    //        };
-    //    });
-    //});
+                var config =
+                {
+                    url: aardvark.getScriptRelativeUrl("http", "fs"),
+                    caching: true,
+                    folderSelect: (openFileConfig.mode === "folder"),
+                    fileSelect: (openFileConfig.mode === "file"),
+                    hideFiles: false,
+                    onselect: function (path) {  },
+                    submit: function (path) { callback([path]); $(modal).modal('hide'); },
+                    cancel: function () { console.log("[FS] cancel"); }
+                };
+
+                var browser = new FileBrowser(config);
+                var $browser = $('#filebrowser-browser');
+                $browser.filebrowser(browser);
+                $browser.height(screen.height - 600);
+
+                $(modal).modal({
+                    keyboardShortcuts: true,
+                    blurring: true,
+                    onDeny: function () {
+                        browser.cancel();
+                        return true;
+                    },
+                    onApprove: function () {
+                        browser.submit();
+                    }
+                });
+                $(modal).modal('show');
+
+            };
+        });
+    });
 
 }
 
@@ -731,6 +756,13 @@ if (!aardvark.render) {
     }
 }
 
+if (!aardvark.getWorldPosition) {
+    aardvark.getWorldPosition = function (id, pixel, callback) {
+        var r = aardvark.getRenderer(id);
+        r.getWorldPosition(pixel, callback)
+    };
+}
+
 if (!aardvark.connect) {
     aardvark.connect = function (path) {
         var urlParams;
@@ -792,22 +824,24 @@ if (!aardvark.connect) {
     }
 }
 
-function setAttribute(id,name,value)
-{
-    if(name == "value")
-    {
-        id.setAttribute(name,value);
-        id.value = value;
-    }
-    else if (name == "selected")
-    {
-        id.setAttribute(name, value);
-        id.selected = value;
-    }
-    else 
-    {   
-        id.setAttribute(name,value);
-    }
+if (!aardvark.setAttribute) {
+    aardvark.setAttribute = function (id, name, value) {
+        if (name == "value") {
+            id.setAttribute(name, value);
+            id.value = value;
+        }
+        else if (name == "checked") {
+            id.setAttribute(name, value);
+            id.checked = (value ? true : false);
+        }
+        else if (name == "selected") {
+            id.setAttribute(name, value);
+            id.selected = value;
+        }
+        else {
+            id.setAttribute(name, value);
+        }
+    };
 }
 
 $(document).ready(function () {
@@ -856,3 +890,12 @@ if (!aardvark.getRelativeCoords) {
 
 var getRelativeCoords = aardvark.getRelativeCoords;
 
+if (!aardvark.toFixedV2d) {
+
+    aardvark.toFixedV2d = function toFixedV2d(v) {
+        return { X: v.x.toFixed(), Y: v.y.toFixed() };
+    }
+
+}
+
+var toFixedV2d = aardvark.toFixedV2d;

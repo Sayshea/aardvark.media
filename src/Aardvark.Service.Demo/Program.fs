@@ -67,7 +67,7 @@ let kitchenSink argv =
 
     //let app = Viewer.KitchenSinkApp.app
     //let app = Aardvark.UI.Numeric.app
-    let app = TreeViewApp.app
+    //let app = TreeViewApp.app
     //let app = AnnotationProperties.app
     //let app = SimpleTestApp.app
     //let app = SimpleCompositionViewer.app
@@ -89,6 +89,8 @@ let kitchenSink argv =
     //let app = RenderModelApp.app 
     //let app = AnnotationApp.app
     //let app = DragNDrop.App.app
+
+    let app = AnimationDemo.AnimationDemoApp.app
 
     //Config.shouldTimeUIUpdate <- true
     //Config.shouldTimeJsCodeGeneration <- true

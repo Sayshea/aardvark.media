@@ -8,11 +8,14 @@ open Aardvark.UI
 
 open Suave
 open Suave.WebPart
+open Suave.Filters
+open Suave.Successful
+open Suave.Operators
 
-[<EntryPoint>]
+type Dummy = Dummy
+
+[<EntryPoint; STAThread>]
 let main argv = 
-
-    failwith "this example is currently broken. feel free to fix it ;)"
 
     Xilium.CefGlue.ChromiumUtilities.unpackCef()
     Chromium.init argv
@@ -28,6 +31,7 @@ let main argv =
 
     WebPart.startServer 4321 [ 
         MutableApp.toWebPart' app.Runtime false instance
+        prefix "/resources" >=> (Suave.Embedded.browse typeof<Dummy>.Assembly)
         Suave.Files.browseHome
     ]  
 
@@ -41,5 +45,4 @@ let main argv =
     form.Icon <- Icons.aardvark 
 
     Application.Run form
-    System.Environment.Exit 0
     0 
