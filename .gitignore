@@ -15,3 +15,4 @@ bin/Debug
 /src/FablishInterop/Models.g.fs
 /.paket/Paket.Restore.targets
 /src/Aardvark.Service.Demo/*.TMP
+/src/Examples/00 - Silvia/11 - Treeview with Versions/.vs/10 - Treeview/v14/*.suo
