@@ -374,10 +374,12 @@ module Mutable =
         let _data = MTree.Create(__initial.data)
         let _selected = MList.Create(__initial.selected)
         let _strgDown = ResetMod.Create(__initial.strgDown)
+        let _drag = MOption.Create(__initial.drag)
         
         member x.data = _data
         member x.selected = _selected :> alist<_>
         member x.strgDown = _strgDown :> IMod<_>
+        member x.drag = _drag :> IMod<_>
         
         member x.Current = __current :> IMod<_>
         member x.Update(v : Model.TreeModel) =
@@ -387,6 +389,7 @@ module Mutable =
                 MTree.Update(_data, v.data)
                 MList.Update(_selected, v.selected)
                 ResetMod.Update(_strgDown,v.strgDown)
+                MOption.Update(_drag, v.drag)
                 
         
         static member Create(__initial : Model.TreeModel) : MTreeModel = MTreeModel(__initial)
@@ -410,7 +413,7 @@ module Mutable =
                     override x.Update(r,f) = { r with data = f r.data }
                 }
             let selected =
-                { new Lens<Model.TreeModel, Aardvark.Base.plist<Microsoft.FSharp.Collections.List<Aardvark.Base.Index>>>() with
+                { new Lens<Model.TreeModel, Aardvark.Base.plist<Microsoft.FSharp.Collections.list<Aardvark.Base.Index>>>() with
                     override x.Get(r) = r.selected
                     override x.Set(r,v) = { r with selected = v }
                     override x.Update(r,f) = { r with selected = f r.selected }
@@ -420,4 +423,10 @@ module Mutable =
                     override x.Get(r) = r.strgDown
                     override x.Set(r,v) = { r with strgDown = v }
                     override x.Update(r,f) = { r with strgDown = f r.strgDown }
+                }
+            let drag =
+                { new Lens<Model.TreeModel, Microsoft.FSharp.Core.Option<Microsoft.FSharp.Collections.list<Aardvark.Base.Index>>>() with
+                    override x.Get(r) = r.drag
+                    override x.Set(r,v) = { r with drag = v }
+                    override x.Update(r,f) = { r with drag = f r.drag }
                 }

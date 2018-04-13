@@ -19,12 +19,12 @@ let initialValues = {
     data = 
         Tree.node { name = "root"; unit = "" } defaultProperties <| PList.ofList [
             Tree.node { name = "node 0"; unit = "°C" } defaultProperties <| PList.ofList [
-//                Leaf ({ name = "leaf 00"; value = 20 }, { isSelected = false })
-//                Leaf ({ name = "leaf 01"; value = 22 }, { isSelected = false })
+                Leaf ({ name = "leaf 00"; value = 20 }, { isSelected = false })
+                Leaf ({ name = "leaf 10"; value = 22 }, { isSelected = false })
             ]
             Tree.node { name = "node 1"; unit = "%" } defaultProperties <| PList.ofList [
-//                Leaf ({ name = "leaf 01"; value = 84 }, { isSelected = false })
-//                Leaf ({ name = "leaf 11"; value = 54 }, { isSelected = false })
+                Leaf ({ name = "leaf 01"; value = 84 }, { isSelected = false })
+                Leaf ({ name = "leaf 11"; value = 54 }, { isSelected = false })
                 Tree.node { name = "node 01"; unit = "%" } defaultProperties <| PList.ofList [
                     Leaf ({ name = "leaf 001"; value = 12 }, { isSelected = false })
                 ]
@@ -32,6 +32,7 @@ let initialValues = {
         ]
     selected = PList.empty
     strgDown = false
+    drag = None
 }
 
 let updateAt (p : list<Index>) (f : Tree -> Tree) (t : Tree) =
@@ -65,8 +66,8 @@ let getItem (p : list<Index>) (t : Tree) =
     i
 
 
-let flipSelected p t b = 
-    updateAt p (
+let flipSelected path t b = 
+    updateAt path (
         function 
             | Leaf (l, p) -> Leaf (l, {p with isSelected = b })
             | Node (l, p, xs) -> Node (l, { p with 
@@ -74,8 +75,8 @@ let flipSelected p t b =
                                                 isExpanded = p.isExpanded }, xs)
         ) t
 
-let selectUpdate (oldSelected : plist<List<Index>>) (path : plist<List<Index>>) (tree : Tree) =
-    let rec changeSelected (p : plist<List<Index>>) ( t : Tree) ( b : bool )  =
+let selectUpdate (oldSelected : plist<list<Index>>) (path : plist<list<Index>>) (tree : Tree) =
+    let rec changeSelected (p : plist<list<Index>>) ( t : Tree) ( b : bool )  =
         match PList.tryAt 0 p with
         | None -> t
         | Some c -> changeSelected (PList.removeAt 0 p) (flipSelected c t b) b
@@ -85,7 +86,7 @@ let selectUpdate (oldSelected : plist<List<Index>>) (path : plist<List<Index>>) 
 
 
 
-let deleteItem (t : Tree) (itempath : List<Index>) = 
+let deleteItem (t : Tree) (itempath : list<Index>) = 
     let parentPath = List.skip 1 itempath
     let tree = updateAt parentPath (
                 function | Leaf _ -> failwith "The parent of a leaf must be a node and not a leaf!"
@@ -134,7 +135,7 @@ let rec update (m:TreeModel) (msg : Message) =
         printfn "deleting: %A" path
         //when an Item is deleted, it should get removed from the selected List too
         let pCount = List.length path
-        let rec removeSelected ( selected : plist<List<Index>> ) ( newSelected : plist<List<Index>> ) = 
+        let rec removeSelected ( selected : plist<list<Index>> ) ( newSelected : plist<list<Index>> ) = 
             match PList.tryAt 0 selected with
                 | None -> newSelected
                 | Some c -> 
@@ -146,7 +147,7 @@ let rec update (m:TreeModel) (msg : Message) =
                     | false -> removeSelected (PList.removeAt 0 selected) (PList.append c newSelected)
         { m with 
             data = deleteItem m.data path
-            //selected = removeSelected m.selected PList.empty
+            selected = removeSelected m.selected PList.empty
         }
     | Selected path ->
         match m.strgDown with
@@ -167,69 +168,99 @@ let rec update (m:TreeModel) (msg : Message) =
     | Keyup Keys.LeftCtrl -> { m with strgDown = false }
     | Keydown Keys.RightCtrl -> { m with strgDown = true }
     | Keyup Keys.RightCtrl -> { m with strgDown = false }
-    | DragStop (source, target) ->
-//        printfn "dragstop."
-        printfn "source: %A" source
-        printfn "target: %A" target
-        let AddItem tree s t =
-            let parentPath p = List.skip 1 p // gives back the path of the parent of an item
+    | DragStop target ->
+        match m.drag with
+            | None -> m
+            | Some source -> 
+                //if the target = source, he shouldn't do anything
+                match ( source = target ) with
+                | true -> m
+                | false -> 
 
-            let item tree = getItem s tree //that's the item that is going to get moved
+                    //TODO: when you move to a selection - what should he do?
+                    //currently there is an exception thrown due to it
+                    let AddItem tree s t =
+                        let parentPath p = List.skip 1 p // gives back the path of the parent of an item
+
+                        let item tree = 
+                            let t = getItem s tree //that's the item that is going to get moved
+                            flipSelected [] t false //after the move, the element shouldn't be selected anymore
             
-            let targetItem = getItem t tree //the element, where the item should be added
+                        let targetItem = getItem t tree //the element, where the item should be added
             
-            match targetItem : Tree with
-                | Leaf _ -> 
-                    //you shouldn't add something to a leaf - so get the parent element
-                    let parent = parentPath t
-                    updateAt parent (
-                        function | Leaf _ -> failwith "You can't add anything to a leaf!"
-                                    | Node (l, p, xs) -> Node (l, p, PList.append (item tree) xs)
-                        ) tree
-                | Node (l, p, xs) -> 
-                    updateAt t (
-                        function | Leaf _ -> failwith "You can't add anything to a leaf!"
-                                    | Node (l, p, xs) -> Node (l, p, PList.append (item tree) xs)
-                        ) tree
+                        match targetItem : Tree with
+                            | Leaf _ -> 
+                                //you shouldn't add something to a leaf - so get the parent element
+                                let parent = parentPath t
+                                updateAt parent (
+                                    function | Leaf _ -> failwith "You can't add anything to a leaf!"
+                                                | Node (l, p, xs) -> Node (l, p, PList.append (item tree) xs)
+                                    ) tree
+                            | Node (l, p, xs) -> 
+                                updateAt t (
+                                    function | Leaf _ -> failwith "You can't add anything to a leaf!"
+                                                | Node (l, p, xs) -> Node (l, p, PList.append (item tree) xs)
+                                    ) tree
 
-//        let AddNode ( model : TreeModel ) = 
-//            { model with data = AddItem model.data source target }
-//
-//        let m' = AddNode m
-//        let m'' = 
-//            { m' with data = deleteItem m'.data source }
+                    //TODO: when your source is an element with children - what to do with the children?
+                    let m'' = { m with data = AddItem m.data source target }
+                    let m' = update m'' (DeleteItem source)
 
-        //let m' = { m with data = deleteItem ( AddItem m.data source target ) source }
-        //m'
+                    let rec checkForChilds source selectedList model = 
+                        let pCount = List.length source
+                        match PList.tryAt 0 selectedList with
+                        | None -> model
+                        | Some c -> 
+                            //need to remove the first elements, because List.forall2 only work on lists with the same size
+                            let last n xs = List.toSeq xs |> Seq.skip (xs.Length - n) |> Seq.toList
+                            let pEnd = last pCount c
+                            match (List.forall2 (fun elem1 elem2 -> elem1 = elem2) pEnd source) with
+                            | true -> 
+                                let m' = update { model with data = AddItem model.data c target } (DeleteItem c)
+                                checkForChilds source (PList.removeAt 0 selectedList) m'
+                            | false -> checkForChilds source (PList.removeAt 0 selectedList) model
+                
+                    let rec moveall model =
+                        match PList.tryAt 0 model.selected with
+                            | None -> model
+                            | Some s -> 
+                                //I need to check, if in selected are childs of the current selected value, so they get moved before
 
-        let m' = update m (DeleteItem source)
-        m'
+                                //TODO: optimization, check if s is a leaf or node, when it's a leaf, I don't need to check for children
+                                let newmodel = checkForChilds s (PList.removeAt 0 model.selected) model
 
+                                let m = { newmodel with data = AddItem newmodel.data s target }                  
+
+                                let m' = update m (DeleteItem s)
+                                moveall m'
+                
+                    let m''' = moveall m'
+
+                    { m''' with drag = None }
+
+    | DragStart source -> 
+        { m with drag = Some source }
     | _ -> m 
 
 let highlightStyle =
     "background-color:lightgrey; border: 1px solid grey"
 
-let pickler = MBrace.FsPickler.FsPickler.CreateXmlSerializer()
+let dragStart event = 
+    "ondragstart", AttributeValue.Event
+        { 
+            clientSide = fun send id -> 
+                String.concat ";" [
+                    sprintf "aardvark.processEvent('%s', 'ondragstart');" id
+                    "event.dataTransfer.setData('text/plain', 'test');"
+                ]
+            serverSide = fun _ _ _ -> 
+                Seq.delay (event >> Seq.singleton)
+        }
 
-//let dragStart event = onEvent "ondragstart" ["event.target.id"] (fun xs -> (printfn "start: %A" xs; event))
-//  onEvent "ondragstart" ["event.target.className"] ( fun xs -> (printfn "class: %A" xs; event))
-let dragStart event = onEvent "ondragstart" ["event.target.className"] ( fun xs -> (printfn "class: %A" xs; event))
-//let dragOver event = js "ondragover" "event.preventDefault"
-//let dragStop event = onEvent "ondrop" ["event.target.className"] (fun xs -> (printfn "end: %A" xs; event))
-let dragStop (makeEvent : List<Index> -> 'a) = 
-    onEvent 
-        "ondrop" 
-        ["event.dataTransfer.getData('path')"] 
-        (fun pathstring -> 
-            let parsed = (pathstring |> Seq.head)
-            let p = parsed.Trim('\"').Replace("\\\"","\"")
-            printfn "source pathstring: %A" p 
-            let path : List<Index> = pickler.UnPickleOfString p
-            makeEvent path
-        )
+let dragStop event = 
+    onEvent "ondrop" [] (ignore >> event)
 
-let leafViewText (leaf : MLeafValue) (p : MLeafProperties) (path : List<Index> ) =
+let leafViewText (leaf : MLeafValue) (p : MLeafProperties) (path : list<Index> ) =
     let leaftext = 
         let attr = 
             amap {
@@ -248,20 +279,21 @@ let leafViewText (leaf : MLeafValue) (p : MLeafProperties) (path : List<Index> )
             }
             yield button [ onClick (fun _ -> DeleteItem path) ][text "x"]
         }
-    let p = pickler.PickleToString path
+    //let p = pickler.PickleToString path
     Incremental.div 
         (AttributeMap.ofList 
             [ clazz "content"; 
               attribute "draggable" "true"; 
               //onEvent "ondragstart" ["event.target.className"] ( fun xs -> (printfn "class: %A" xs; DragStart path)); 
-              attribute "path" p
-              attribute "ondragstart" "drag(event)"; 
-              dragStop (fun source -> DragStop (source,path)); 
+              //attribute "path" p
+              //attribute "ondragstart" "drag(event)"; 
+              dragStart (fun _ -> DragStart path)
+              dragStop (fun _ -> DragStop path); 
               attribute "ondragover" "allowDrop(event)"  
             ]) leaftext
 
 
-let nodeViewText (node : MNodeValue) (p : MProperties) (path : List<Index> ) =
+let nodeViewText (node : MNodeValue) (p : MProperties) (path : list<Index> ) =
     let nodetext = 
         let attr = 
             alist {
@@ -272,12 +304,12 @@ let nodeViewText (node : MNodeValue) (p : MProperties) (path : List<Index> ) =
                 yield onMouseClick (fun xs -> Selected path)
             } |> AList.toList
         alist {
-            let p = pickler.PickleToString path
+            //let p = pickler.PickleToString path
             yield div [ 
                 attribute "draggable" "true"; 
-                attribute "path" p
-                attribute "ondragstart" "drag(event)"; 
-                dragStop (fun source -> DragStop (source,path)); 
+                //attribute "path" p
+                dragStart (fun _ -> DragStart path)
+                dragStop (fun _ -> DragStop path); 
                 attribute "ondragover" "allowDrop(event)" 
                 ] [
                 yield span attr [

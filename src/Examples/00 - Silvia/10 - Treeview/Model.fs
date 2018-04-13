@@ -7,15 +7,16 @@ open Aardvark.UI.Primitives
 open Aardvark.Application
 
 type Message = 
-    | ToggleExpaneded of List<Index>
-    | AddLeaf of List<Index>
-    | AddNode of List<Index>
-    | DeleteItem of List<Index>
-    | Selected of List<Index>
+    | ToggleExpaneded of list<Index>
+    | AddLeaf of list<Index>
+    | AddNode of list<Index>
+    | DeleteItem of list<Index>
+    | Selected of list<Index>
     | Keydown of key : Keys
     | Keyup of key: Keys
-    | StrgSelect of List<Index>
-    | DragStop of List<Index>*List<Index>
+    | StrgSelect of list<Index>
+    | DragStop of list<Index>
+    | DragStart of list<Index>
     | Nothing
 
 [<DomainType>]
@@ -71,6 +72,7 @@ module Tree =
 type TreeModel = 
     { 
         data: Tree 
-        selected : plist<List<Index>>
+        selected : plist<list<Index>>
         strgDown : bool
+        drag : Option<list<Index>>
     }
