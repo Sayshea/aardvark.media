@@ -176,9 +176,6 @@ let rec update (m:TreeModel) (msg : Message) =
                 match ( source = target ) with
                 | true -> m
                 | false -> 
-
-                    //TODO: when you move to a selection - what should he do?
-                    //currently there is an exception thrown due to it
                     let AddItem tree s t =
                         let parentPath p = List.skip 1 p // gives back the path of the parent of an item
 
@@ -190,7 +187,7 @@ let rec update (m:TreeModel) (msg : Message) =
             
                         match targetItem : Tree with
                             | Leaf _ -> 
-                                //you shouldn't add something to a leaf - so get the parent element
+                                //you shouldn't add something to a leaf - so get the parent element and add it there
                                 let parent = parentPath t
                                 updateAt parent (
                                     function | Leaf _ -> failwith "You can't add anything to a leaf!"
@@ -202,10 +199,7 @@ let rec update (m:TreeModel) (msg : Message) =
                                                 | Node (l, p, xs) -> Node (l, p, PList.append (item tree) xs)
                                     ) tree
 
-                    //TODO: when your source is an element with children - what to do with the children?
-                    let m'' = { m with data = AddItem m.data source target }
-                    let m' = update m'' (DeleteItem source)
-
+                    //check for Childrens of the current path (source), that are selected and move the childrens first
                     let rec checkForChilds source selectedList model = 
                         let pCount = List.length source
                         match PList.tryAt 0 selectedList with
@@ -220,23 +214,40 @@ let rec update (m:TreeModel) (msg : Message) =
                                 checkForChilds source (PList.removeAt 0 selectedList) m'
                             | false -> checkForChilds source (PList.removeAt 0 selectedList) model
                 
+                    //move everything, that is selected
                     let rec moveall model =
                         match PList.tryAt 0 model.selected with
                             | None -> model
                             | Some s -> 
-                                //I need to check, if in selected are childs of the current selected value, so they get moved before
+                                // when the target is something that is selected, it should get catched here
+                                match ( s = target ) with
+                                | true -> 
+                                    let m' = 
+                                        { m with 
+                                            selected = PList.removeAt 0 m.selected 
+                                            data = flipSelected s m.data false
+                                        }
+                                    moveall m'
+                                | false -> 
+                                    let item = getItem s model.data
+                                    match item with
+                                    | Leaf (l, p) -> 
+                                        //Leafs don't have children, so I don't need to check for childrens
+                                        let m = { model with data = AddItem model.data s target }
+                                        let m' = update m (DeleteItem s)
+                                        moveall m'
+                                    | Node (l, p, xs) ->
+                                        //for nodes I first check, if one of the childrens is in the selected list
+                                        let newmodel = checkForChilds s (PList.removeAt 0 model.selected) model
+                                        let m = { newmodel with data = AddItem newmodel.data s target }
+                                        let m' = update m (DeleteItem s)
+                                        moveall m'
 
-                                //TODO: optimization, check if s is a leaf or node, when it's a leaf, I don't need to check for children
-                                let newmodel = checkForChilds s (PList.removeAt 0 model.selected) model
-
-                                let m = { newmodel with data = AddItem newmodel.data s target }                  
-
-                                let m' = update m (DeleteItem s)
-                                moveall m'
-                
-                    let m''' = moveall m'
-
-                    { m''' with drag = None }
+                    //check for children of the source, move them and move the source afterwards
+                    let mnew = checkForChilds source m.selected m
+                    //move everything that is selected too
+                    let m' = moveall mnew
+                    { m' with drag = None }
 
     | DragStart source -> 
         { m with drag = Some source }
@@ -279,19 +290,14 @@ let leafViewText (leaf : MLeafValue) (p : MLeafProperties) (path : list<Index> )
             }
             yield button [ onClick (fun _ -> DeleteItem path) ][text "x"]
         }
-    //let p = pickler.PickleToString path
     Incremental.div 
         (AttributeMap.ofList 
             [ clazz "content"; 
               attribute "draggable" "true"; 
-              //onEvent "ondragstart" ["event.target.className"] ( fun xs -> (printfn "class: %A" xs; DragStart path)); 
-              //attribute "path" p
-              //attribute "ondragstart" "drag(event)"; 
               dragStart (fun _ -> DragStart path)
               dragStop (fun _ -> DragStop path); 
               attribute "ondragover" "allowDrop(event)"  
             ]) leaftext
-
 
 let nodeViewText (node : MNodeValue) (p : MProperties) (path : list<Index> ) =
     let nodetext = 
@@ -304,10 +310,8 @@ let nodeViewText (node : MNodeValue) (p : MProperties) (path : list<Index> ) =
                 yield onMouseClick (fun xs -> Selected path)
             } |> AList.toList
         alist {
-            //let p = pickler.PickleToString path
             yield div [ 
                 attribute "draggable" "true"; 
-                //attribute "path" p
                 dragStart (fun _ -> DragStart path)
                 dragStop (fun _ -> DragStop path); 
                 attribute "ondragover" "allowDrop(event)" 
@@ -352,10 +356,6 @@ let rec traverseTree path (model : IMod<MTree>) =
                     | true -> yield style "visible"
                     | false -> yield style "hidden"
                 } |> AttributeMap.ofAMap
-
-//            let! asd = (c |> AList.toMod)
-//
-//            printfn "%A" asd
 
             let children = AList.collecti (fun i v -> traverseTree (i::path) v) c
 
