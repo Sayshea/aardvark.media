@@ -287,6 +287,7 @@ let leafViewText (leaf : MLeafValue) (p : MLeafProperties) (path : list<Index> )
                 yield Incremental.text (leaf.name)
                 yield text " = "
                 yield Incremental.text (leaf.value |> Mod.map string)
+                yield text " "
             }
             yield button [ onClick (fun _ -> DeleteItem path) ][text "x"]
         }
@@ -320,7 +321,7 @@ let nodeViewText (node : MNodeValue) (p : MProperties) (path : list<Index> ) =
                     yield Incremental.text (node.name)
                     yield text " [Unit: "
                     yield Incremental.text (node.unit)
-                    yield text "]"
+                    yield text "] "
                 ]
                 yield button [ onClick (fun _ -> AddNode path) ][text "AddNode"]
                 yield button [ onClick (fun _ -> AddLeaf path) ][text "AddLeaf"]

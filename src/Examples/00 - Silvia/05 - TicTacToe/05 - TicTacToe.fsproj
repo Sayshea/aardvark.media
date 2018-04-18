@@ -9,7 +9,7 @@
     <ProjectGuid>{b5f5a13a-1a39-4794-a42d-b87ec72be262}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>_01___Inc</RootNamespace>
-    <AssemblyName>Inc</AssemblyName>
+    <AssemblyName>TicTacToe</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>

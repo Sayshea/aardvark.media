@@ -9,7 +9,7 @@
     <ProjectGuid>{7ef3885a-1c76-41a8-8c01-8378b91803de}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>_01___Inc</RootNamespace>
-    <AssemblyName>Inc</AssemblyName>
+    <AssemblyName>TicTacToe Canvas</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>

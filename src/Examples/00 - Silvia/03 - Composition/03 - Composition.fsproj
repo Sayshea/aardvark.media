@@ -9,7 +9,7 @@
     <ProjectGuid>{540aac43-cbe0-42b6-8516-50be7ba8b659}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>_01___Inc</RootNamespace>
-    <AssemblyName>Inc</AssemblyName>
+    <AssemblyName>Composition</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>

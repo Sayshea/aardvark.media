@@ -59,6 +59,7 @@ let view (m : MVectorModel) =
                     td[attribute "colspan" "2"][
                         div[clazz "ui buttons small"][
                             button [clazz "ui button"; onClick (fun _ -> Normalize)] [text "Norm"]
+                            text " "
                             button [clazz "ui button"; onClick (fun _ -> Reset)] [text "Reset"]
                         ]
                     ]
