@@ -52,6 +52,8 @@
     <Compile Include="Staging.fs" />
     <Compile Include="SilviaModel.fs" />
     <Compile Include="SilviaApp.fs" />
+    <Compile Include="counterModel.fs" />
+    <Compile Include="counterApp.fs" />
     <Compile Include="Model.fs" />
     <Compile Include="App.fs" />
     <Compile Include="Program.fs" />
