@@ -21,6 +21,7 @@ let updateCount tasks =
     | 1 -> "1 item left"
     | a -> (string a) + " items left"
 
+
 let update (model : TaskList) (msg : TodoMessage) =
     let realUpdate model msg =
         match msg with
@@ -58,6 +59,8 @@ let view (model : MTaskList) =
                 ]
         }
 
+    // most efficient adaptive variant (compared to explict storage of count in model)..... TOOD for integation: amap.count
+    let count = model.tasks |> AMap.toASet |> ASet.filter (fun (k,v) -> not v.completed) |> ASet.count
     body [] [
         h1 [] [text "Todos"]
 
@@ -67,10 +70,10 @@ let view (model : MTaskList) =
         ]
 
         Incremental.table AttributeMap.empty todoListGui
-
         br []
-
         Incremental.text ( model.activeCount |> Mod.map string )
+        br []
+        Incremental.text (count |> Mod.map (function 0 -> "no items" | 1 -> "one item" | n -> sprintf "%d items" n))
     ]
 
 let threads (model : TaskList) = 

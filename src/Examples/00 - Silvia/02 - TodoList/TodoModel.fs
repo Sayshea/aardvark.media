@@ -13,9 +13,9 @@ type MyTask =
     }
 
 type TodoMessage =
-    | AddToTodoList of string
-    | DeleteElement of string
-    | AddToCompletedList of string * string * MyTask
+    | AddToTodoList of taskname : string
+    | DeleteElement of guid : string
+    | AddToCompletedList of message: string * guid : string * task : MyTask
 
 // design space .....
 
@@ -24,7 +24,7 @@ type TaskList =
     {
         //tasks : hset<MyTask>
         tasks : hmap<string, MyTask>
-        activeCount : string
+        activeCount : string // to have easier access for active todos (could be computed adaptively from tasks amap provided by mmodel)
     }
 
 //[<DomainType>]

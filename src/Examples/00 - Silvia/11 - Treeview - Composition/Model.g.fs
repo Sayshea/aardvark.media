@@ -13,19 +13,16 @@ module Mutable =
     type MLeafValue(__initial : Model.LeafValue) =
         inherit obj()
         let mutable __current : Aardvark.Base.Incremental.IModRef<Model.LeafValue> = Aardvark.Base.Incremental.EqModRef<Model.LeafValue>(__initial) :> Aardvark.Base.Incremental.IModRef<Model.LeafValue>
-        let _name = ResetMod.Create(__initial.name)
-        let _value = ResetMod.Create(__initial.value)
+        let _printMessage = ResetMod.Create(__initial.printMessage)
         
-        member x.name = _name :> IMod<_>
-        member x.value = _value :> IMod<_>
+        member x.printMessage = _printMessage :> IMod<_>
         
         member x.Current = __current :> IMod<_>
         member x.Update(v : Model.LeafValue) =
             if not (System.Object.ReferenceEquals(__current.Value, v)) then
                 __current.Value <- v
                 
-                ResetMod.Update(_name,v.name)
-                ResetMod.Update(_value,v.value)
+                ResetMod.Update(_printMessage,v.printMessage)
                 
         
         static member Create(__initial : Model.LeafValue) : MLeafValue = MLeafValue(__initial)
@@ -42,36 +39,27 @@ module Mutable =
     module LeafValue =
         [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
         module Lens =
-            let name =
-                { new Lens<Model.LeafValue, Microsoft.FSharp.Core.string>() with
-                    override x.Get(r) = r.name
-                    override x.Set(r,v) = { r with name = v }
-                    override x.Update(r,f) = { r with name = f r.name }
-                }
-            let value =
-                { new Lens<Model.LeafValue, Microsoft.FSharp.Core.int>() with
-                    override x.Get(r) = r.value
-                    override x.Set(r,v) = { r with value = v }
-                    override x.Update(r,f) = { r with value = f r.value }
+            let printMessage =
+                { new Lens<Model.LeafValue, Aardvark.UI.DomNode<Model.Message>>() with
+                    override x.Get(r) = r.printMessage
+                    override x.Set(r,v) = { r with printMessage = v }
+                    override x.Update(r,f) = { r with printMessage = f r.printMessage }
                 }
     
     
     type MNodeValue(__initial : Model.NodeValue) =
         inherit obj()
         let mutable __current : Aardvark.Base.Incremental.IModRef<Model.NodeValue> = Aardvark.Base.Incremental.EqModRef<Model.NodeValue>(__initial) :> Aardvark.Base.Incremental.IModRef<Model.NodeValue>
-        let _name = ResetMod.Create(__initial.name)
-        let _unit = ResetMod.Create(__initial.unit)
+        let _printMessage = ResetMod.Create(__initial.printMessage)
         
-        member x.name = _name :> IMod<_>
-        member x.unit = _unit :> IMod<_>
+        member x.printMessage = _printMessage :> IMod<_>
         
         member x.Current = __current :> IMod<_>
         member x.Update(v : Model.NodeValue) =
             if not (System.Object.ReferenceEquals(__current.Value, v)) then
                 __current.Value <- v
                 
-                ResetMod.Update(_name,v.name)
-                ResetMod.Update(_unit,v.unit)
+                ResetMod.Update(_printMessage,v.printMessage)
                 
         
         static member Create(__initial : Model.NodeValue) : MNodeValue = MNodeValue(__initial)
@@ -88,17 +76,11 @@ module Mutable =
     module NodeValue =
         [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
         module Lens =
-            let name =
-                { new Lens<Model.NodeValue, Microsoft.FSharp.Core.string>() with
-                    override x.Get(r) = r.name
-                    override x.Set(r,v) = { r with name = v }
-                    override x.Update(r,f) = { r with name = f r.name }
-                }
-            let unit =
-                { new Lens<Model.NodeValue, Microsoft.FSharp.Core.string>() with
-                    override x.Get(r) = r.unit
-                    override x.Set(r,v) = { r with unit = v }
-                    override x.Update(r,f) = { r with unit = f r.unit }
+            let printMessage =
+                { new Lens<Model.NodeValue, Aardvark.UI.DomNode<Model.Message>>() with
+                    override x.Get(r) = r.printMessage
+                    override x.Set(r,v) = { r with printMessage = v }
+                    override x.Update(r,f) = { r with printMessage = f r.printMessage }
                 }
     
     
@@ -183,43 +165,6 @@ module Mutable =
                     override x.Set(r,v) = { r with isSelected = v }
                     override x.Update(r,f) = { r with isSelected = f r.isSelected }
                 }
-    
-    
-    type MVersion(__initial : Model.Version) =
-        inherit obj()
-        let mutable __current : Aardvark.Base.Incremental.IModRef<Model.Version> = Aardvark.Base.Incremental.EqModRef<Model.Version>(__initial) :> Aardvark.Base.Incremental.IModRef<Model.Version>
-        let _version = ResetMod.Create(__initial.version)
-        
-        member x.version = _version :> IMod<_>
-        
-        member x.Current = __current :> IMod<_>
-        member x.Update(v : Model.Version) =
-            if not (System.Object.ReferenceEquals(__current.Value, v)) then
-                __current.Value <- v
-                
-                ResetMod.Update(_version,v.version)
-                
-        
-        static member Create(__initial : Model.Version) : MVersion = MVersion(__initial)
-        static member Update(m : MVersion, v : Model.Version) = m.Update(v)
-        
-        override x.ToString() = __current.Value.ToString()
-        member x.AsString = sprintf "%A" __current.Value
-        interface IUpdatable<Model.Version> with
-            member x.Update v = x.Update v
-    
-    
-    
-    [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
-    module Version =
-        [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
-        module Lens =
-            let version =
-                { new Lens<Model.Version, Microsoft.FSharp.Core.int>() with
-                    override x.Get(r) = r.version
-                    override x.Set(r,v) = { r with version = v }
-                    override x.Update(r,f) = { r with version = f r.version }
-                }
     [<AbstractClass; System.Runtime.CompilerServices.Extension; StructuredFormatDisplay("{AsString}")>]
     type MTree() =
         abstract member TryUpdate : Model.Tree -> bool
@@ -227,8 +172,8 @@ module Mutable =
         
         static member private CreateValue(__model : Model.Tree) = 
             match __model with
-                | Node(item1, item2, item3, item4) -> MNode(__model, item1, item2, item3, item4) :> MTree
-                | Leaf(item1, item2, item3) -> MLeaf(__model, item1, item2, item3) :> MTree
+                | Node(item1, item2, item3) -> MNode(__model, item1, item2, item3) :> MTree
+                | Leaf(item1, item2) -> MLeaf(__model, item1, item2) :> MTree
         
         static member Create(v : Model.Tree) =
             ResetMod.Create(MTree.CreateValue v) :> IMod<_>
@@ -239,18 +184,16 @@ module Mutable =
             if not (m.GetValue().TryUpdate v) then
                 m.Update(MTree.CreateValue v)
     
-    and private MNode(__initial : Model.Tree, item1 : Model.NodeValue, item2 : Model.Properties, item3 : Microsoft.FSharp.Core.int, item4 : Aardvark.Base.plist<Model.Tree>) =
+    and private MNode(__initial : Model.Tree, item1 : Model.NodeValue, item2 : Model.Properties, item3 : Aardvark.Base.plist<Model.Tree>) =
         inherit MTree()
         
         let mutable __current = __initial
         let _item1 = MNodeValue.Create(item1)
         let _item2 = MProperties.Create(item2)
-        let _item3 = ResetMod.Create(item3)
-        let _item4 = ResetMapList(item4, (fun _ e -> MTree.Create(e)), (fun (m,e) -> MTree.Update(m, e)))
+        let _item3 = ResetMapList(item3, (fun _ e -> MTree.Create(e)), (fun (m,e) -> MTree.Update(m, e)))
         member x.item1 = _item1
         member x.item2 = _item2
-        member x.item3 = _item3 :> IMod<_>
-        member x.item4 = _item4 :> alist<_>
+        member x.item3 = _item3 :> alist<_>
         
         override x.ToString() = __current.ToString()
         override x.AsString = sprintf "%A" __current
@@ -260,25 +203,22 @@ module Mutable =
                 true
             else
                 match __model with
-                    | Node(item1,item2,item3,item4) -> 
+                    | Node(item1,item2,item3) -> 
                         __current <- __model
                         MNodeValue.Update(_item1, item1)
                         MProperties.Update(_item2, item2)
                         _item3.Update(item3)
-                        _item4.Update(item4)
                         true
                     | _ -> false
     
-    and private MLeaf(__initial : Model.Tree, item1 : Model.LeafValue, item2 : Model.LeafProperties, item3 : Microsoft.FSharp.Core.int) =
+    and private MLeaf(__initial : Model.Tree, item1 : Model.LeafValue, item2 : Model.LeafProperties) =
         inherit MTree()
         
         let mutable __current = __initial
         let _item1 = MLeafValue.Create(item1)
         let _item2 = MLeafProperties.Create(item2)
-        let _item3 = ResetMod.Create(item3)
         member x.item1 = _item1
         member x.item2 = _item2
-        member x.item3 = _item3 :> IMod<_>
         
         override x.ToString() = __current.ToString()
         override x.AsString = sprintf "%A" __current
@@ -288,11 +228,10 @@ module Mutable =
                 true
             else
                 match __model with
-                    | Leaf(item1,item2,item3) -> 
+                    | Leaf(item1,item2) -> 
                         __current <- __model
                         MLeafValue.Update(_item1, item1)
                         MLeafProperties.Update(_item2, item2)
-                        _item3.Update(item3)
                         true
                     | _ -> false
     
@@ -301,8 +240,8 @@ module Mutable =
     module MTreePatterns =
         let (|MNode|MLeaf|) (m : MTree) =
             match m with
-            | :? MNode as v -> MNode(v.item1,v.item2,v.item3,v.item4)
-            | :? MLeaf as v -> MLeaf(v.item1,v.item2,v.item3)
+            | :? MNode as v -> MNode(v.item1,v.item2,v.item3)
+            | :? MLeaf as v -> MLeaf(v.item1,v.item2)
             | _ -> failwith "impossible"
     
     
@@ -352,7 +291,7 @@ module Mutable =
                     override x.Update(r,f) = { r with data = f r.data }
                 }
             let selected =
-                { new Lens<Model.TreeModel, Aardvark.Base.plist<Microsoft.FSharp.Collections.List<Aardvark.Base.Index>>>() with
+                { new Lens<Model.TreeModel, Aardvark.Base.plist<Microsoft.FSharp.Collections.list<Aardvark.Base.Index>>>() with
                     override x.Get(r) = r.selected
                     override x.Set(r,v) = { r with selected = v }
                     override x.Update(r,f) = { r with selected = f r.selected }

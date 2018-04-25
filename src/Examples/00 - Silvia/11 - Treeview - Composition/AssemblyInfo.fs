@@ -1,4 +1,4 @@
-﻿namespace _10___Treeview_with_Versions.AssemblyInfo
+﻿namespace _11___Treeview___Composition.AssemblyInfo
 
 open System.Reflection
 open System.Runtime.CompilerServices
@@ -7,11 +7,11 @@ open System.Runtime.InteropServices
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[<assembly: AssemblyTitle("10 - Treeview with Versions")>]
+[<assembly: AssemblyTitle("11 - Treeview - Composition")>]
 [<assembly: AssemblyDescription("")>]
 [<assembly: AssemblyConfiguration("")>]
 [<assembly: AssemblyCompany("")>]
-[<assembly: AssemblyProduct("10 - Treeview with Versions")>]
+[<assembly: AssemblyProduct("11 - Treeview - Composition")>]
 [<assembly: AssemblyCopyright("Copyright ©  2018")>]
 [<assembly: AssemblyTrademark("")>]
 [<assembly: AssemblyCulture("")>]

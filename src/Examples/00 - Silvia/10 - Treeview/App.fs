@@ -101,9 +101,10 @@ let rec update (m:TreeModel) (msg : Message) =
             data = 
                 updateAt path (
                     function | Leaf (l, p) -> Leaf (l, p)
-                                | Node (l, p, xs) -> Node (l, {p with 
-                                                                isExpanded = not p.isExpanded 
-                                                                isSelected = p.isSelected }, xs )
+                                | Node (l, p, xs) -> 
+                                    Node (l, {p with 
+                                                isExpanded = not p.isExpanded 
+                                                isSelected = p.isSelected }, xs )
                 ) m.data
         }
     | AddLeaf path -> 
@@ -243,8 +244,15 @@ let rec update (m:TreeModel) (msg : Message) =
                                         let m' = update m (DeleteItem s)
                                         moveall m'
 
-                    //check for children of the source, move them and move the source afterwards
-                    let mnew = checkForChilds source m.selected m
+                    let mnew = 
+                        match m.selected.Count with
+                        | 0 -> 
+                            //if nothing is selected, it should simply move the node or leaf
+                            let m'' = { m with data = AddItem m.data source target }
+                            update m'' (DeleteItem source)
+                        | _ -> 
+                            //when there is something selected, I need to first check for childrens of the source and move them first
+                            checkForChilds source m.selected m
                     //move everything that is selected too
                     let m' = moveall mnew
                     { m' with drag = None }
@@ -390,6 +398,20 @@ let view (m: MTreeModel) =
             ]
         )
     )
+//
+//module TreeViewApp =
+//    type Model<'a> = {
+//        expandedNodes : hset<'a>
+//        selected : Option<'a>
+//    }
+//
+//    let view (m : 'a) (children : 'a -> list<'a>) (createUI : 'a -> DomNode<'msg>) (onClick : 'a -> TreeMsg<'msg>) : DomNode<TreeMsg<'msg>> = failwith ""
+//
+//
+//type ComopsedApp = { treeViewModel : TreeViewApp.Model }
+//
+//let outerViewFunction (m : ComopsedApp) =
+//    TreeViewApp.view m.treeViewModel ....
 
 let threads (model : TreeModel) = 
     ThreadPool.empty

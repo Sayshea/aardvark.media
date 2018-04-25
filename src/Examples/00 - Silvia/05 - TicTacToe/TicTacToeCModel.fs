@@ -4,6 +4,8 @@ open Aardvark.Base
 open Aardvark.Base.Incremental
 open Aardvark.UI.Primitives
 
+// https://fsharpforfunandprofit.com/ddd/
+
 type Message = 
     | PlayBrick of int * int
     | Restart

@@ -3,34 +3,28 @@
 open Aardvark.Base
 open Aardvark.Base.Incremental
 open Aardvark.UI.Primitives
+open Aardvark.UI
 
 open Aardvark.Application
 
 type Message = 
-    | ToggleExpaneded of path : list<Index>
-    | AddLeaf of path : list<Index>
-    | AddNode of path : list<Index>
-    | DeleteItem of path : list<Index>
-    | Selected of path : list<Index>
+    | ToggleExpaneded of list<Index>
+    | Selected of list<Index>
     | Keydown of key : Keys
     | Keyup of key: Keys
-    //| StrgSelect of path : list<Index>
-    | DragStop of path : list<Index>
-    | DragStart of path : list<Index>
+    | StrgSelect of list<Index>
     | Nothing
 
 [<DomainType>]
 type LeafValue = 
     {
-        name : string
-        value : int
+        printMessage : DomNode<Message>
     }
 
 [<DomainType>]
 type NodeValue = 
     {
-        name : string
-        unit : string
+        printMessage : DomNode<Message>
     }
 
 [<DomainType>]
@@ -51,18 +45,6 @@ type Tree =
     | Node of NodeValue * Properties * plist<Tree>
     | Leaf of LeafValue * LeafProperties
     
-//and [<DomainType>] NodeStuff =
-//    { 
-//        value: NodeValue
-//        children: plist<Tree>
-//        properties : Properties
-//    }
-//    
-//and [<DomainType>] LeafStuff =
-//    { 
-//        value: LeafValue
-//        properties : LeafProperties
-//    }
 [<AutoOpen; CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module Tree =
     let node v p c = Node (v,p,c) //{ value = v; children = c; properties = p }
@@ -74,5 +56,4 @@ type TreeModel =
         data: Tree 
         selected : plist<list<Index>>
         strgDown : bool
-        drag : Option<list<Index>>
     }

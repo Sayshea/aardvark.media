@@ -6,10 +6,10 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{856b9a55-eb0a-463b-818e-76135db3c12a}</ProjectGuid>
+    <ProjectGuid>{c57a9735-5763-48d6-83e5-b73165f90f7f}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>_01___Inc</RootNamespace>
-    <AssemblyName>Inc</AssemblyName>
+    <AssemblyName>TreeviewComposition</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
@@ -69,12 +69,11 @@
     <Compile Include="Staging.fs" />
     <Compile Include="Model.fs" />
     <Compile Include="App.fs" />
+    <Compile Include="CompositonModel.fs" />
+    <Compile Include="CompositionApp.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
     <None Include="paket.references" />
-    <Content Include="dragDropTree.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
