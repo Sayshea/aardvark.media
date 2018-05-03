@@ -36,15 +36,17 @@ let view (m: MModel) =
          
     let tv = TreeVApp.view innerTree (fun s path -> button [onClick (fun _ -> Clicked s)] [text s]) m.treeModel
 
-    body [] [
-        h1 [][text "Generic TreeView"]
-        tv |> UI.map TreeMsg
-    ]
+    require Html.semui (
+        body [attribute "style" "margin:10"] [
+            h1 [][text "Generic TreeView"]
+            tv |> UI.map TreeMsg
+        ]
+    )
 
 let threads (model : Model) = 
     ThreadPool.empty
 
-let initialValues = { cTree = UserNode("bigger",[UserLeaf "hallo";UserLeaf "hallo2"]); treeModel = { collapsed = HSet.empty } }
+let initialValues = { cTree = UserNode("Node 0",[UserNode("Node 10", [UserLeaf "Leaf 010";UserLeaf "Leaf 110"]);UserLeaf "Leaf 00";UserLeaf "Leaf 10"]); treeModel = { collapsed = HSet.empty } }
 
 let app =                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
     {

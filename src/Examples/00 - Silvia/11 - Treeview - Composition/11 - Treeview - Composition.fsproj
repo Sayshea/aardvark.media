@@ -67,8 +67,6 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Staging.fs" />
-    <Compile Include="TVModel.fs" />
-    <Compile Include="TVApp.fs" />
     <Compile Include="TreeViewModel.fs" />
     <Compile Include="TreeVApp.fs" />
     <Compile Include="Model.fs" />

@@ -363,7 +363,7 @@ let rec traverseTree path (model : IMod<MTree>) =
                     let! isExpanded = p.isExpanded
                     match isExpanded with
                     | true -> yield style "visible"
-                    | false -> yield style "hidden"
+                    | false -> yield style "display:none"
                 } |> AttributeMap.ofAMap
 
             let children = AList.collecti (fun i v -> traverseTree (i::path) v) c
@@ -392,7 +392,7 @@ let view (m: MTreeModel) =
 
     require dependencies (
         require Html.semui (
-            body [ onKeyDown (fun usedKey -> Keydown usedKey); onKeyUp (fun usedKey -> Keyup usedKey) ][
+            body [ attribute "style" "margin:10"; onKeyDown (fun usedKey -> Keydown usedKey); onKeyUp (fun usedKey -> Keyup usedKey) ][
                 h1 [][ text "TreeView" ]
                 Incremental.div (AttributeMap.ofList [clazz "ui list"]) (traverseTree [] m.data)
             ]

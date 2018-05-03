@@ -24,6 +24,7 @@ let update ( m : TModel) (msg : Message<'userMessage>) =
         match (HSet.contains path m.collapsed) with
         | true -> { m with collapsed = HSet.remove path m.collapsed }
         | false -> { m with collapsed = HSet.add path m.collapsed }
+    //it is possible to advance the update function, that it react to specific userMsg, like for adding Nodes/Leafs, etc.
     | UserMessage userMsg -> m
 
 let leafVText a path (ui : 'a -> list<int> -> DomNode<'userMessage>) (m : MTModel) = 
@@ -39,9 +40,7 @@ let leafVText a path (ui : 'a -> list<int> -> DomNode<'userMessage>) (m : MTMode
 let nodeVText a path (ui : 'a -> list<int> -> DomNode<'userMessage>) (m : MTModel) = 
     let nodetext = 
         alist {
-            yield div [] [
-                yield ui a path
-            ]
+            yield ui a path
         }
     Incremental.div (AttributeMap.ofList [clazz "content"]) nodetext
 
@@ -89,11 +88,8 @@ let view (tree : IMod<InnerTree<'a>>) (ui : 'a -> list<int> -> DomNode<'userMess
             traverseTree [] tree ui m
         )
 
-    require Html.semui (
-        Incremental.div AttributeMap.empty <|
-             alist {
-                let! tree = tree
-                yield Incremental.div (AttributeMap.ofList [clazz "ui list"]) tree
-            }
-    )
-
+    Incremental.div AttributeMap.empty <|
+            alist {
+            let! tree = tree
+            yield Incremental.div (AttributeMap.ofList [clazz "ui list"]) tree
+        }
