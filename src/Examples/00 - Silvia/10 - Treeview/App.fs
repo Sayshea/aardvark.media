@@ -31,7 +31,7 @@ let initialValues = {
             ]
         ]
     selected = PList.empty
-    strgDown = false
+    ctrlDown = false
     drag = None
 }
 
@@ -151,7 +151,7 @@ let rec update (m:TreeModel) (msg : Message) =
             selected = removeSelected m.selected PList.empty
         }
     | Selected path ->
-        match m.strgDown with
+        match m.ctrlDown with
         | false ->
             let oldSelected = m.selected
             { m with
@@ -165,10 +165,10 @@ let rec update (m:TreeModel) (msg : Message) =
             }
     //if someone presses down both Ctrl Keys, and releases than one, it's not detected correctly
     //it could be solved with an additional variable for left or right and then checking if left or right is pressed
-    | Keydown Keys.LeftCtrl -> { m with strgDown = true }
-    | Keyup Keys.LeftCtrl -> { m with strgDown = false }
-    | Keydown Keys.RightCtrl -> { m with strgDown = true }
-    | Keyup Keys.RightCtrl -> { m with strgDown = false }
+    | Keydown Keys.LeftCtrl -> { m with ctrlDown = true }
+    | Keyup Keys.LeftCtrl -> { m with ctrlDown = false }
+    | Keydown Keys.RightCtrl -> { m with ctrlDown = true }
+    | Keyup Keys.RightCtrl -> { m with ctrlDown = false }
     | DragStop target ->
         match m.drag with
             | None -> m

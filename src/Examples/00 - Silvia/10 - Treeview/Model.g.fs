@@ -272,12 +272,12 @@ module Mutable =
         let mutable __current : Aardvark.Base.Incremental.IModRef<Model.TreeModel> = Aardvark.Base.Incremental.EqModRef<Model.TreeModel>(__initial) :> Aardvark.Base.Incremental.IModRef<Model.TreeModel>
         let _data = MTree.Create(__initial.data)
         let _selected = MList.Create(__initial.selected)
-        let _strgDown = ResetMod.Create(__initial.strgDown)
+        let _ctrlDown = ResetMod.Create(__initial.ctrlDown)
         let _drag = MOption.Create(__initial.drag)
         
         member x.data = _data
         member x.selected = _selected :> alist<_>
-        member x.strgDown = _strgDown :> IMod<_>
+        member x.ctrlDown = _ctrlDown :> IMod<_>
         member x.drag = _drag :> IMod<_>
         
         member x.Current = __current :> IMod<_>
@@ -287,7 +287,7 @@ module Mutable =
                 
                 MTree.Update(_data, v.data)
                 MList.Update(_selected, v.selected)
-                ResetMod.Update(_strgDown,v.strgDown)
+                ResetMod.Update(_ctrlDown,v.ctrlDown)
                 MOption.Update(_drag, v.drag)
                 
         
@@ -317,11 +317,11 @@ module Mutable =
                     override x.Set(r,v) = { r with selected = v }
                     override x.Update(r,f) = { r with selected = f r.selected }
                 }
-            let strgDown =
+            let ctrlDown =
                 { new Lens<Model.TreeModel, Microsoft.FSharp.Core.bool>() with
-                    override x.Get(r) = r.strgDown
-                    override x.Set(r,v) = { r with strgDown = v }
-                    override x.Update(r,f) = { r with strgDown = f r.strgDown }
+                    override x.Get(r) = r.ctrlDown
+                    override x.Set(r,v) = { r with ctrlDown = v }
+                    override x.Update(r,f) = { r with ctrlDown = f r.ctrlDown }
                 }
             let drag =
                 { new Lens<Model.TreeModel, Microsoft.FSharp.Core.Option<Microsoft.FSharp.Collections.list<Aardvark.Base.Index>>>() with

@@ -14,10 +14,8 @@ type Message =
     | Selected of path : list<Index>
     | Keydown of key : Keys
     | Keyup of key: Keys
-    //| StrgSelect of path : list<Index>
     | DragStop of path : list<Index>
     | DragStart of path : list<Index>
-    | Nothing
 
 [<DomainType>]
 type LeafValue = 
@@ -73,6 +71,6 @@ type TreeModel =
     { 
         data: Tree 
         selected : plist<list<Index>>
-        strgDown : bool
+        ctrlDown : bool
         drag : Option<list<Index>>
     }
