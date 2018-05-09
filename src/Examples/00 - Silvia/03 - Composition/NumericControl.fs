@@ -36,7 +36,7 @@ let view (m : MModel) =
 let view2 (m : MModel) (direction : string) =
     tr[] [
         td[] [a [clazz "ui label circular Big"] [text direction]]
-        td[] [a [clazz "ui label circular Big"] [Incremental.text (m.value |> Mod.map(fun x -> " " + x.ToString()))]]
+        td[] [a [clazz "ui label circular Big"] [Incremental.text (m.value |> Mod.map(fun x -> sprintf "%.2f" x))]]
         td[] [
             button [clazz "ui icon button"; onClick (fun _ -> Increment)] [text "+"]
             button [clazz "ui icon button"; onClick (fun _ -> Decrement)] [text "-"]                                        

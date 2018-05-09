@@ -11,9 +11,9 @@ open System
 open Staging
 
 let updateCompleted tasks guid task c =
-    let changedT = { name = task.name; createDate = task.createDate; completed = c }
-    let f = function | Some o -> { o with completed = c} | None -> failwith ""
-    HMap.update guid f tasks
+    //let changedT = { name = task.name; createDate = task.createDate; completed = c }
+    let updatedTask = function | Some t -> { t with completed = c} | None -> failwith ""
+    HMap.update guid updatedTask tasks
 
 let updateCount tasks =
     let i = tasks |> HMap.filter (fun _ t -> t.completed = false) |> HMap.count
@@ -28,11 +28,10 @@ let update (model : TaskList) (msg : TodoMessage) =
         | AddToTodoList s -> 
             let task = { name = s; createDate = DateTime.Now; completed = false }
             let guid = System.Guid.NewGuid() |> string
-            let t = { model with tasks = HMap.add guid task model.tasks }
-            t
+            { model with tasks = HMap.add guid task model.tasks }
         | DeleteElement guid -> { model with tasks = HMap.remove guid model.tasks }
-        | AddToCompletedList (msg, g, task) -> 
-            match msg with 
+        | AddToCompletedList (message, g, task) -> 
+            match message with 
             | "true" -> { model with tasks = updateCompleted model.tasks g task true }
             | _ -> { model with tasks = updateCompleted model.tasks g task false }
     let m' = realUpdate model msg
@@ -61,6 +60,7 @@ let view (model : MTaskList) =
 
     // most efficient adaptive variant (compared to explict storage of count in model)..... TOOD for integation: amap.count
     let count = model.tasks |> AMap.toASet |> ASet.filter (fun (k,v) -> not v.completed) |> ASet.count
+    //let futureCount = model.tasks |> AMap.filter (fun k v -> not v.completed) |> AMap.count
     body [] [
         h1 [] [text "Todos"]
 

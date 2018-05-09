@@ -70,7 +70,7 @@ let view (m : MVectorModel) =
 
 let view2 (m : MVectorModel) =
     require Html.semui (             
-        div[][
+        body[attribute "style" "margin:10"][
             table [] [
                 NumericControl.view2 m.x "X:" |> UI.map UpdateX
                 NumericControl.view2 m.y "Y:" |> UI.map UpdateY
