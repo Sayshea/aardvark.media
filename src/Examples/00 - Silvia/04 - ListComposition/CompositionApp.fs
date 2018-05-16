@@ -63,8 +63,10 @@ let view (m : MVectorModel) =
             NumericControl.view vector |> UI.map (fun a -> Update'(i,a)) 
         )
 
+    let countedDim = AList.count m.vectorList
+
     require Html.semui (             
-        div[][
+        body[attribute "style" "margin:10"][
             h1 [] [text "n-dim Vectors"]
 
             text "Add or remove dimensions: "
@@ -77,8 +79,11 @@ let view (m : MVectorModel) =
             button [onClick(fun _ -> Reset)] [text "Reset Values"]
             button [onClick(fun _ -> ResetAll)] [text "Delete all Dimensions"]
             br []
-            text "Number of dimensions: "
+            text "Number of dimensions (from model): "
             Incremental.text (m.numDim |> Mod.map (fun x -> sprintf "%i" x))
+            br []
+            text "Number of dimensions (counted): "
+            Incremental.text (countedDim |> Mod.map (fun x -> sprintf "%i" x))
         ]
     )
 
