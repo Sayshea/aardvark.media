@@ -8,7 +8,7 @@ open Aardvark.UI
 open TreeViewModel
 
 open OpenHardwareMonitor
-open OpenHardwareMonitor.Hardware;
+open OpenHardwareMonitor.Hardware
 
 //type UserTree = UserLeaf of string | UserNode of string * list<UserTree>
 //

@@ -6,8 +6,8 @@ open Aardvark.UI.Primitives
 open Aardvark.Base
 open Aardvark.Base.Incremental
 
-open OpenHardwareMonitor;
-open OpenHardwareMonitor.Hardware;
+open OpenHardwareMonitor
+open OpenHardwareMonitor.Hardware
 
 open Model
 
