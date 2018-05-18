@@ -19,7 +19,7 @@ let main argv =
     Aardvark.Init()
 
     use app = new OpenGlApplication()
-    use form = new Form(Width = 800, Height = 600)
+    use form = new Form(Width = 1000, Height = 800)
 
     let instance = 
         App.app |> App.start
@@ -38,14 +38,14 @@ let main argv =
         MutableApp.toWebPart' app.Runtime false instance
         Suave.Files.browseHome
     ]  
-
-    use ctrl = new AardvarkCefBrowser()
-    ctrl.Dock <- DockStyle.Fill
-    form.Controls.Add ctrl
-    ctrl.StartUrl <- "http://localhost:4321/"
-    ctrl.ShowDevTools()
-    form.Text <- "Examples"
-    form.Icon <- Icons.aardvark 
+    Console.ReadLine()
+//    use ctrl = new AardvarkCefBrowser()
+//    ctrl.Dock <- DockStyle.Fill
+//    form.Controls.Add ctrl
+//    ctrl.StartUrl <- "http://localhost:4321/"
+//    ctrl.ShowDevTools()
+//    form.Text <- "Examples"
+//    form.Icon <- Icons.aardvark 
 
     Application.Run form
     0 

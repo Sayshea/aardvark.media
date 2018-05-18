@@ -1,4 +1,4 @@
-﻿namespace _12___Remote_Rendering.AssemblyInfo
+﻿namespace _12___Hardware_Monitor.AssemblyInfo
 
 open System.Reflection
 open System.Runtime.CompilerServices
@@ -7,11 +7,11 @@ open System.Runtime.InteropServices
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[<assembly: AssemblyTitle("12 - Remote Rendering")>]
+[<assembly: AssemblyTitle("12 - Hardware Monitor")>]
 [<assembly: AssemblyDescription("")>]
 [<assembly: AssemblyConfiguration("")>]
 [<assembly: AssemblyCompany("")>]
-[<assembly: AssemblyProduct("12 - Remote Rendering")>]
+[<assembly: AssemblyProduct("12 - Hardware Monitor")>]
 [<assembly: AssemblyCopyright("Copyright ©  2018")>]
 [<assembly: AssemblyTrademark("")>]
 [<assembly: AssemblyCulture("")>]

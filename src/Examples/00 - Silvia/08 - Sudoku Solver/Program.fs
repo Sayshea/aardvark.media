@@ -36,14 +36,14 @@ let main argv =
         MutableApp.toWebPart' app.Runtime false instance
         Suave.Files.browseHome
     ]  
-
-    use ctrl = new AardvarkCefBrowser()
-    ctrl.Dock <- DockStyle.Fill
-    form.Controls.Add ctrl
-    ctrl.StartUrl <- "http://localhost:4321/"
-    ctrl.ShowDevTools()
-    form.Text <- "Examples"
-    form.Icon <- Icons.aardvark 
-
-    Application.Run form
+    Console.ReadLine()
+//    use ctrl = new AardvarkCefBrowser()
+//    ctrl.Dock <- DockStyle.Fill
+//    form.Controls.Add ctrl
+//    ctrl.StartUrl <- "http://localhost:4321/"
+//    ctrl.ShowDevTools()
+//    form.Text <- "Examples"
+//    form.Icon <- Icons.aardvark 
+//
+//    Application.Run form
     0 

@@ -75,7 +75,7 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aardvark.Cef.WinForms.Proce
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "11 - Treeview - Composition", "Examples\00 - Silvia\11 - Treeview - Composition\11 - Treeview - Composition.fsproj", "{C57A9735-5763-48D6-83E5-B73165F90F7F}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "12 - Remote Rendering", "Examples\00 - Silvia\12 - Remote Rendering\12 - Remote Rendering.fsproj", "{03688148-A7C8-4CC6-91F5-DAC1F04791D2}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "12 - Hardware Monitor", "Examples\00 - Silvia\12 - Hardware Monitor\12 - Hardware Monitor.fsproj", "{03688148-A7C8-4CC6-91F5-DAC1F04791D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
