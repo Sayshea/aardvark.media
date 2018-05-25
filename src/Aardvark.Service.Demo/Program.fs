@@ -76,7 +76,7 @@ let kitchenSink argv =
     //let app = Vector3d.app
    // let app = NavigationModeDemo.app
     //let app = Simple2DDrawingApp.app
-    //let app = SimpleScaleApp.app
+    let app = SimpleScaleApp.app
 
     //let app = DragNDrop.TranslateController.app
     //let app = DragNDrop.RotationController.app
@@ -90,7 +90,7 @@ let kitchenSink argv =
     //let app = AnnotationApp.app
     //let app = DragNDrop.App.app
 
-    let app = AnimationDemo.AnimationDemoApp.app
+    //let app = AnimationDemo.AnimationDemoApp.app
 
     //Config.shouldTimeUIUpdate <- true
     //Config.shouldTimeJsCodeGeneration <- true

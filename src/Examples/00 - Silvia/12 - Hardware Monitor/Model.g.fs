@@ -126,12 +126,16 @@ module Mutable =
         let _hw = MMap.Create(__initial.hw, (fun v -> MHWPart.Create(v)), (fun (m,v) -> MHWPart.Update(m, v)), (fun v -> v))
         let _updateInterval = ResetMod.Create(__initial.updateInterval)
         let _updateTime = ResetMod.Create(__initial.updateTime)
-        let _maxKeepDataInterval = ResetMod.Create(__initial.maxKeepDataInterval)
+        let _viewInterval = ResetMod.Create(__initial.viewInterval)
+        let _threadPool = ResetMod.Create(__initial.threadPool)
+        let _data = ResetMod.Create(__initial.data)
         
         member x.hw = _hw :> amap<_,_>
         member x.updateInterval = _updateInterval :> IMod<_>
         member x.updateTime = _updateTime :> IMod<_>
-        member x.maxKeepDataInterval = _maxKeepDataInterval :> IMod<_>
+        member x.viewInterval = _viewInterval :> IMod<_>
+        member x.threadPool = _threadPool :> IMod<_>
+        member x.data = _data :> IMod<_>
         
         member x.Current = __current :> IMod<_>
         member x.Update(v : Model.Model) =
@@ -141,7 +145,9 @@ module Mutable =
                 MMap.Update(_hw, v.hw)
                 ResetMod.Update(_updateInterval,v.updateInterval)
                 ResetMod.Update(_updateTime,v.updateTime)
-                ResetMod.Update(_maxKeepDataInterval,v.maxKeepDataInterval)
+                ResetMod.Update(_viewInterval,v.viewInterval)
+                ResetMod.Update(_threadPool,v.threadPool)
+                ResetMod.Update(_data,v.data)
                 
         
         static member Create(__initial : Model.Model) : MModel = MModel(__initial)
@@ -165,7 +171,7 @@ module Mutable =
                     override x.Update(r,f) = { r with hw = f r.hw }
                 }
             let updateInterval =
-                { new Lens<Model.Model, Microsoft.FSharp.Core.int>() with
+                { new Lens<Model.Model, System.TimeSpan>() with
                     override x.Get(r) = r.updateInterval
                     override x.Set(r,v) = { r with updateInterval = v }
                     override x.Update(r,f) = { r with updateInterval = f r.updateInterval }
@@ -176,9 +182,21 @@ module Mutable =
                     override x.Set(r,v) = { r with updateTime = v }
                     override x.Update(r,f) = { r with updateTime = f r.updateTime }
                 }
-            let maxKeepDataInterval =
+            let viewInterval =
                 { new Lens<Model.Model, System.TimeSpan>() with
-                    override x.Get(r) = r.maxKeepDataInterval
-                    override x.Set(r,v) = { r with maxKeepDataInterval = v }
-                    override x.Update(r,f) = { r with maxKeepDataInterval = f r.maxKeepDataInterval }
+                    override x.Get(r) = r.viewInterval
+                    override x.Set(r,v) = { r with viewInterval = v }
+                    override x.Update(r,f) = { r with viewInterval = f r.viewInterval }
+                }
+            let threadPool =
+                { new Lens<Model.Model, Aardvark.Base.Incremental.ThreadPool<Model.Msg>>() with
+                    override x.Get(r) = r.threadPool
+                    override x.Set(r,v) = { r with threadPool = v }
+                    override x.Update(r,f) = { r with threadPool = f r.threadPool }
+                }
+            let data =
+                { new Lens<Model.Model, Microsoft.FSharp.Collections.list<Microsoft.FSharp.Core.int>>() with
+                    override x.Get(r) = r.data
+                    override x.Set(r,v) = { r with data = v }
+                    override x.Update(r,f) = { r with data = f r.data }
                 }

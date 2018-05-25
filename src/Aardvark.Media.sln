@@ -77,6 +77,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "11 - Treeview - Composition
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "12 - Hardware Monitor", "Examples\00 - Silvia\12 - Hardware Monitor\12 - Hardware Monitor.fsproj", "{03688148-A7C8-4CC6-91F5-DAC1F04791D2}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "13 - Hardware Monitor - Trial and Error", "Examples\00 - Silvia\13 - Hardware Monitor - Trial and Error\13 - Hardware Monitor - Trial and Error.fsproj", "{5A686915-316A-4F06-8A98-47F821EBF221}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -219,6 +221,10 @@ Global
 		{03688148-A7C8-4CC6-91F5-DAC1F04791D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03688148-A7C8-4CC6-91F5-DAC1F04791D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03688148-A7C8-4CC6-91F5-DAC1F04791D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A686915-316A-4F06-8A98-47F821EBF221}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A686915-316A-4F06-8A98-47F821EBF221}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A686915-316A-4F06-8A98-47F821EBF221}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A686915-316A-4F06-8A98-47F821EBF221}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -249,5 +255,6 @@ Global
 		{FED9040E-ABD6-4257-A4F4-593AF8BB0B57} = {87275308-069C-44FD-8EF3-9C49F2E37154}
 		{C57A9735-5763-48D6-83E5-B73165F90F7F} = {87275308-069C-44FD-8EF3-9C49F2E37154}
 		{03688148-A7C8-4CC6-91F5-DAC1F04791D2} = {87275308-069C-44FD-8EF3-9C49F2E37154}
+		{5A686915-316A-4F06-8A98-47F821EBF221} = {87275308-069C-44FD-8EF3-9C49F2E37154}
 	EndGlobalSection
 EndGlobal

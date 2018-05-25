@@ -9,6 +9,19 @@ open System
 open OpenHardwareMonitor
 open OpenHardwareMonitor.Hardware
 
+type Msg =
+    | UpdateHM
+    | ChangeInterval of string
+    | ChangeViewTime of string
+
+
+type PlottyType = {
+    x : list<int>
+    y : list<int>
+    typeP : string
+}
+
+
 [<DomainType>]
 type Entry = {
     name : string 
@@ -30,9 +43,12 @@ type HwIdent = string
 [<DomainType>]
 type Model = {
     hw : hmap<string, HWPart>
-    updateInterval : int // Time in ms
+    updateInterval : TimeSpan // Time in ms
     updateTime : DateTime
-    maxKeepDataInterval : TimeSpan
+    viewInterval : TimeSpan
+    [<NonSerialized>]
+    threadPool : ThreadPool<Msg>
+    data : list<int>
 }
 
 type UpdateModel = {
