@@ -8,7 +8,7 @@ open Aardvark.UI
 open System
 
 type dataStructure = {
-    name : IMod<string>
+    name : string
     unit : string
     data : amap<DateTime, float32>
 }

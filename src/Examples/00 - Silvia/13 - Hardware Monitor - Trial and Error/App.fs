@@ -220,12 +220,13 @@ let view (m: MModel) =
                         let! hardwarePart = AMap.find entry.hwpart m.hw
                         let! sensor = AMap.find entry.sensor hardwarePart.sensor
                         let! u = sensor.sensorType
+                        let! name = sensor.name
                         let dataList = 
                             sensor.value 
                             |> AMap.filter (fun k _ -> k > (DateTime.Now - viewInterval))
                             |> AMap.chooseM (fun _ v -> v)
 
-                        let data = { name = sensor.name; unit = (unit u); data = dataList }
+                        let data = { name = name; unit = (unit u); data = dataList }
                         yield data
                 }
             

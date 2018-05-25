@@ -69,7 +69,7 @@ let indexList i =
     let g = int rgb.Y 
     let b = int rgb.Z 
 
-    let yoff = float i * -12.0
+    let yoff = float i * -15.0
     { color = sprintf "rgb(%d,%d,%d)" r g b; xOff = 0.; yOff = yoff}
 
 type calculatedGridPoints = 
@@ -133,7 +133,6 @@ let graph (xSize : int) (ySize : int ) (timeInt : TimeSpan) (dataObject : alist<
             yield line gp.OI_14_y gp.II_14_y [style "stroke: black; fill: black; stroke-dasharray:2,2"]
             yield line gp.OI_24_y gp.II_24_y [style "stroke: black; fill: black; stroke-dasharray:2,2"]
             yield line gp.OI_34_y gp.II_34_y [style "stroke: black; fill: black; stroke-dasharray:2,2"]
-
         }
 
     let dataObjectTransform = dataObject |> AList.toList |> List.mapi (fun i v -> (i,v)) |> AList.ofList
@@ -188,9 +187,13 @@ let graph (xSize : int) (ySize : int ) (timeInt : TimeSpan) (dataObject : alist<
 
                                 yield t
                         ] |> List.choose (fun i -> i)
+                    let legendPos = gp.OO + V2d(150,60) - V2d(styling.xOff, styling.yOff)
                     yield [
-                        stext (gp.OO - V2d(5,-6) - V2d(styling.xOff, styling.yOff)) [style ("fill:" + styling.color + "; text-anchor:end")] (sprintf ("%0.0f") (minY dataSet))
-                        stext (gp.OI - V2d(5,-6) - V2d(styling.xOff, styling.yOff)) [style ("fill:" + styling.color + "; text-anchor:end")] (sprintf ("%0.0f") (maxY dataSet))
+                        stext (gp.OO - V2d(5,-6) - V2d(styling.xOff, styling.yOff)) [style ("fill:" + styling.color + "; text-anchor:end")] (sprintf "%0.0f" (minY dataSet))
+                        stext (gp.OI - V2d(5,-6) - V2d(styling.xOff, styling.yOff)) [style ("fill:" + styling.color + "; text-anchor:end")] (sprintf "%0.0f" (maxY dataSet))
+						
+						//TODO: check if dataSet is the correct variable and not newData
+                        stext (legendPos) [style ("fill:" + styling.color + "; text-anchor:start")] (sprintf "%s [%s]" dataSet.name dataSet.unit )
                     ]
                 | false -> yield [text ""]
 
