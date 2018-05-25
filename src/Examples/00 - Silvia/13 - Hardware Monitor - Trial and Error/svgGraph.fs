@@ -184,8 +184,15 @@ let graph (xSize : int) (ySize : int ) (timeInt : TimeSpan) (dataObject : alist<
                             yield t
                     ] |> List.choose (fun i -> i)
                 
-                yield [stext (gp.OO - V2d(5,-6) - V2d(styling.xOff, styling.yOff)) [style ("fill:" + styling.color + "; text-anchor:end")] (sprintf ("%0.0f") minY)]
-                yield [stext (gp.OI - V2d(5,-6) - V2d(styling.xOff, styling.yOff)) [style ("fill:" + styling.color + "; text-anchor:end")] (sprintf ("%0.0f") maxY)]
+                let count = List.length newData
+
+                match count > 0 with
+                | true -> 
+                    yield [
+                        stext (gp.OO - V2d(5,-6) - V2d(styling.xOff, styling.yOff)) [style ("fill:" + styling.color + "; text-anchor:end")] (sprintf ("%0.0f") minY)
+                        stext (gp.OI - V2d(5,-6) - V2d(styling.xOff, styling.yOff)) [style ("fill:" + styling.color + "; text-anchor:end")] (sprintf ("%0.0f") maxY)
+                    ]
+                | false -> yield [text ""]
 
         }
     

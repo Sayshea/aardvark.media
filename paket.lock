@@ -175,6 +175,7 @@ NUGET
       Microsoft.NETCore.Platforms (>= 1.1)
       System.Runtime.InteropServices.RuntimeInformation (>= 4.3)
     Newtonsoft.Json (10.0.3)
+    OpenHardwareMonitor (0.7.1)
     SharpZipLib (0.86)
     Suave (2.0.5)
       FSharp.Core (>= 4.0.0.1)

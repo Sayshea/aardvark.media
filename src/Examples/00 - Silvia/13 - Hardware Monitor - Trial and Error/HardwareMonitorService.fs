@@ -25,7 +25,7 @@ thisComputer.Open()
 let null2option arg = if obj.ReferenceEquals(arg, null) then None else Some arg
 
 let nullFloat2optFloat (value : System.Nullable<float32> ) = 
-    null2option value.Value
+    null2option value |> Option.bind (fun value -> null2option value.Value)
 
 let initModel (hardwareItem : IHardware) datetime =
     //let datetime = DateTime.Now

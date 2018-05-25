@@ -35,6 +35,8 @@ nuget WindowsAPICodePack-ShellExtensions
 nuget TurboJpegWrapper      ~> 1.4.2.6
 nuget Suave                 ~> 2.0.2
 
+nuget OpenHardwareMonitor   ~> 0.7.1
+
 group Build
 framework: net45
 content: none
