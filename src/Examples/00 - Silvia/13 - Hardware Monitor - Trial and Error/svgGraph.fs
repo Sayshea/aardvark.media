@@ -162,35 +162,35 @@ let graph (xSize : int) (ySize : int ) (timeInt : TimeSpan) (dataObject : alist<
 
                 let styling = indexList index
 
-                let minY = 
-                    match dataSet.unit with
+                let minY data = 
+                    match data.unit with
                     | "%" -> 0.
                     | _ -> (newData |> List.map (fun (t,v) -> v) |> List.min |> float) * 0.95 |> floor
-                let maxY = 
-                    match dataSet.unit with
+                let maxY data = 
+                    match data.unit with
                     | "%" -> 100.
                     | _ -> (newData |> List.map (fun (t,v) -> v) |> List.max |> float) * 1.05 |> ceil
 
-                yield [
-                        for t,v in newData do
-                            let x = convertX xScale timeInt (convertToSeconds t) x1
-                            let y = convertY yScale minY (maxY - minY) v y0
-
-                            let t = 
-                                match x < x0 with
-                                | true -> None
-                                | false -> Some(circle (V2d (x,y)) 1. [style ("stroke: " + styling.color + "; fill:black")])
-
-                            yield t
-                    ] |> List.choose (fun i -> i)
                 
                 let count = List.length newData
 
                 match count > 0 with
                 | true -> 
                     yield [
-                        stext (gp.OO - V2d(5,-6) - V2d(styling.xOff, styling.yOff)) [style ("fill:" + styling.color + "; text-anchor:end")] (sprintf ("%0.0f") minY)
-                        stext (gp.OI - V2d(5,-6) - V2d(styling.xOff, styling.yOff)) [style ("fill:" + styling.color + "; text-anchor:end")] (sprintf ("%0.0f") maxY)
+                            for t,v in newData do
+                                let x = convertX xScale timeInt (convertToSeconds t) x1
+                                let y = convertY yScale (minY dataSet) ((maxY dataSet) - (minY dataSet)) v y0
+
+                                let t = 
+                                    match x < x0 with
+                                    | true -> None
+                                    | false -> Some(circle (V2d (x,y)) 1. [style ("stroke: " + styling.color + "; fill:black")])
+
+                                yield t
+                        ] |> List.choose (fun i -> i)
+                    yield [
+                        stext (gp.OO - V2d(5,-6) - V2d(styling.xOff, styling.yOff)) [style ("fill:" + styling.color + "; text-anchor:end")] (sprintf ("%0.0f") (minY dataSet))
+                        stext (gp.OI - V2d(5,-6) - V2d(styling.xOff, styling.yOff)) [style ("fill:" + styling.color + "; text-anchor:end")] (sprintf ("%0.0f") (maxY dataSet))
                     ]
                 | false -> yield [text ""]
 
