@@ -20,8 +20,10 @@ open svgGraphModel
 
 //This Value is a TimeSpan for Data, that should be keeped, even when the viewInterval is smaller
 //so when you want to zoom in for the last Minute, that you don't loose all the data
-let minTime = TimeSpan.FromHours(2.) 
+let minTime = TimeSpan.FromHours(12.) 
 
+//function, that updates the model and remove old entries, that are below the keeptime.
+//the keeptime is dependend on the viewInterval and the minTime.
 let rec updateModel (m:Model) (updateValues:List<UpdateModel>) =
     match updateValues with
     | [] -> m
@@ -54,6 +56,7 @@ let rec updateModel (m:Model) (updateValues:List<UpdateModel>) =
         let timeUpdatedModel = { newModel with updateTime = v.date }
         updateModel timeUpdatedModel xs
 
+//thread that calls the Update from the HardwareMonitor, depends on the m.updateTime
 let rec timerProc wait =
     proclist {
         yield UpdateHM
@@ -61,6 +64,7 @@ let rec timerProc wait =
         yield! timerProc wait
     }
 
+//thread that wait for the values from the sensors 
 let updateProc () =
     let update =
         async {
@@ -73,21 +77,27 @@ let updateProc () =
 
 let update (m : Model) (msg : Msg) =
     match msg with
+    //Updates the Values, if 
     | UpdateHM -> 
         match m.hw = hmap.Empty with
+        //receives all values from the sensors and generate the hardware structure
         | true ->
             let t, hw = initValues()
             { m with 
                 hw = hw
                 updateTime = t
             }
+        //adds a thread for updating the values from the sensors
         | false ->
             let proc = updateProc()
             let pool = m.threadPool |> ThreadPool.add "updating" proc
             { m with threadPool = pool }
+    //gets called by the thread, when he receives the values from the sensors, and updates the values in the model
     | UpdateReceived uv ->
         let m' = updateModel m uv
         { m' with threadPool = m'.threadPool |> ThreadPool.remove "updating"}
+    //Change the update Interval based on the selection of the dropdown menu
+    //removes the old thread and generate a new one
     | ChangeInterval t -> 
         match System.Int32.TryParse(t) with
         | true,interval ->
@@ -97,19 +107,19 @@ let update (m : Model) (msg : Msg) =
             { m with updateInterval = (TimeSpan.FromMilliseconds(interval|>float)); threadPool = threads }
         | false,i -> 
             m
+    //Change the viewInterval for the Graph (x-Axis)
     | ChangeViewTime t ->
         match System.Int32.TryParse(t) with
         | true, i ->
-            printfn "TimeInterval: %d" i
             { m with viewInterval = (TimeSpan.FromMilliseconds(i|>float))}
         | false, i ->
             m
+    //Adds or removes entries from the selected plist, based on the identifier
     | ChangeSelected (b, h, s) -> 
         match b with
         | "true" ->
             { m with selected = PList.append { hwpart = h; sensor = s} m.selected }
         | _ -> 
-            //PList.
             let t = PList.filter (fun i -> not (i.hwpart = h && i.sensor = s) ) m.selected
             { m with selected = t }
 
@@ -118,7 +128,6 @@ let view (m: MModel) =
         yield attribute "border" "1"
         yield attribute "style" "border-collapse:collapse"
     } 
-
     let attrtable = [attribute "style" "padding: 2px"]
 
     //https://github.com/openhardwaremonitor/openhardwaremonitor/blob/master/Hardware/ISensor.cs
@@ -135,9 +144,10 @@ let view (m: MModel) =
         | SensorType.Factor -> ""
         | SensorType.Power -> "W"
         | SensorType.Data -> "GB"
-        //| SensorType.SmallData -> "MB" not included in this library
+        //| SensorType.SmallData -> "MB" not included in this Version of the library
         | a -> sprintf "%A" a
 
+    //generate the table lines for the entries of a hardware part
     let entrylist (sensor : amap<string,MEntry> ) hwIdent = 
         let sensorv = sensor
         let s = sensor |> AMap.toASet |> ASet.sortBy (fun (k,v) -> k)
@@ -166,12 +176,12 @@ let view (m: MModel) =
                 ]        
         }
 
+    //generates the view for the table
     let tableview =
         let hw = m.hw |> AMap.toASet |> ASet.sortBy (fun (k,t) -> k)
         let l = 1
         alist {
             for (hwIdent,hwpart) in hw do
-
                 yield tr attrtable [
                     yield th (List.append attrtable [attribute "colspan" "3"]) [
                         yield Incremental.text (hwpart.hardwareName |> Mod.map string)
@@ -180,25 +190,30 @@ let view (m: MModel) =
                 yield! entrylist hwpart.sensor hwIdent
         }
 
-    // value in milliseconds
+    //check if the value is selected and returns the line entries for the values
+    //time values are in milliseconds [ms]
     let highlightSelect (sel : TimeSpan) (value : int) (name : string) =
         match (sel = TimeSpan.FromMilliseconds(value |> float)) with
         | true -> option [attribute "value" (string value); attribute "selected" "selected"] [text name]
         | false -> option [attribute "value" (string value)] [text name]
 
-    let selectView (sel : (IMod<TimeSpan>)) (timelist : list<int*string>) =
+    //generates the entries for the dropdown menu
+    //int in timelist needs to be in milliseconds
+    let dropdownList (sel : (IMod<TimeSpan>)) (timelist : list<int*string>) =
         alist {
             let! selected = sel
             for time,txt in timelist do
                 yield highlightSelect selected time txt
         }
 
+    //values for the dropdown menu, how often the values should be updated
     let timeUpdate = 
         [
             (100, "0.1 s"); (500, "0.5 s"); (1000,"1 s"); (2000,"2 s"); (5000,"5 s"); (10000,"10 s"); (60000,"1 min"); (120000,"2 min");
             (300000,"5 min"); (600000,"10 min"); (1800000,"30 min"); (3600000,"1 h"); (7200000,"2 h"); (21600000,"6 h")
         ]
 
+    //values for the dropdown menu, for the x Axis of the diagram
     let timeView = 
         let tv = 
             [
@@ -207,11 +222,11 @@ let view (m: MModel) =
             ]
         tv |> List.map (fun (v,t) -> (v * 60 * 1000, t))
 
+    //takes the selected values and plot the svg Graph
     let plotSvgGraph =
-        let selected = m.selected |> AList.toASet |> ASet.sortBy (fun (t) -> t.hwpart)
+        let selected = m.selected |> AList.toASet |> ASet.sortBy (fun t -> t.hwpart)
         alist {
             let genList = List.empty
-
             let! viewInterval = m.viewInterval
 
             let plotList = 
@@ -244,18 +259,17 @@ let view (m: MModel) =
             div [][
                 div [attribute "style" "float:left; margin-right:10"] [
                     text "Updateinterval: "
-                    Incremental.select (AttributeMap.ofList [onChange(fun msg -> ChangeInterval msg)]) (selectView m.updateInterval timeUpdate)
+                    Incremental.select (AttributeMap.ofList [onChange(fun msg -> ChangeInterval msg)]) (dropdownList m.updateInterval timeUpdate)
                     br []
 
                     Incremental.table (AttributeMap.ofAMap atr) tableview
                 ] 
                 div [attribute "style" "float:left"][
                     text "Anzeige Interval: "
-                    Incremental.select (AttributeMap.ofList [onChange(fun msg -> ChangeViewTime msg)]) (selectView m.viewInterval timeView)
+                    Incremental.select (AttributeMap.ofList [onChange(fun msg -> ChangeViewTime msg)]) (dropdownList m.viewInterval timeView)
                     br[]
 
                     Incremental.div AttributeMap.empty plotSvgGraph
-                    
                 ]
             ]
         ]
