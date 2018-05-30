@@ -29,3 +29,19 @@ let inputCheckbox (funct : string -> 'msg) (check : bool) =
 //when the focus of the input gets lost, it removes the entry and generate a message
 let onChangeResetInput (cb : string -> 'msg) = 
     onEvent "onchange" ["event.target.value, event.target.value = ''"] (List.head >> Pickler.json.UnPickleOfString >> cb)
+
+
+let dragStart event = 
+    "ondragstart", AttributeValue.Event
+        { 
+            clientSide = fun send id -> 
+                String.concat ";" [
+                    sprintf "aardvark.processEvent('%s', 'ondragstart');" id
+                    "event.dataTransfer.setData('text/plain', 'test');"
+                ]
+            serverSide = fun _ _ _ -> 
+                Seq.delay (event >> Seq.singleton)
+        }
+
+let dragStop event = 
+    onEvent "ondrop" [] (ignore >> event)

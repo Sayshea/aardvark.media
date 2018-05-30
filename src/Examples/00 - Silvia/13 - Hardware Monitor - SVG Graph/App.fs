@@ -214,6 +214,7 @@ let view (m: MModel) =
         ]
 
     //values for the dropdown menu, for the x Axis of the diagram
+    //the int in the list are in min, but get transformed to milliseconds
     let timeView = 
         let tv = 
             [

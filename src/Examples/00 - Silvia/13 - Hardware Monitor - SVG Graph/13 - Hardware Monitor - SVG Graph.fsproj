@@ -67,7 +67,6 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Staging.fs" />
-    <Content Include="graph.js" />
     <Compile Include="Model.fs" />
     <Compile Include="HardwareMonitorService.fs" />
     <Compile Include="svgGraphModel.fs" />

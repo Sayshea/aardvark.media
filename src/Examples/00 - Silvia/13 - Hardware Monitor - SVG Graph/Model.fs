@@ -9,7 +9,7 @@ open System
 open OpenHardwareMonitor
 open OpenHardwareMonitor.Hardware
 
-//this Type is used for the update from the HardwareMonitor
+//this Type is used for the update from the HardwareMonitorService
 type UpdateModel = {
     date : DateTime
     HwIdent : string
